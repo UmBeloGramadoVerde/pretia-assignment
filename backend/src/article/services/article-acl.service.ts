@@ -12,10 +12,10 @@ export class ArticleAclService extends BaseAclService<Article> {
     super();
     this.canDo(ROLE.ADMIN, [Action.Manage]);
     this.canDo(ROLE.USER, [Action.Create, Action.List, Action.Read]);
-    this.canDo(ROLE.USER, [Action.Update, Action.Delete], this.isArticleAuthor);
+    //this.canDo(ROLE.USER, [Action.Update, Action.Delete], this.isArticleAuthor);
   }
 
-  isArticleAuthor(article: Article, user: Actor): boolean {
-    return article.author.id === user.id;
+  async isArticleAuthor(article: Article, user: Actor): Promise<boolean> {
+    return (await article.author).id === user.id;
   }
 }

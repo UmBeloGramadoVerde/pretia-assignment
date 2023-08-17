@@ -2,11 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 import { ROLE } from '../../auth/constants/role.constant';
+import { ObjectId } from 'typeorm';
 
 export class UserOutput {
   @Expose()
   @ApiProperty()
-  id: number;
+  id: string;
 
   @Expose()
   @ApiProperty()

@@ -5,15 +5,17 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  ObjectIdColumn
+  ObjectIdColumn,
+  ObjectId
 } from 'typeorm';
 
 import { User } from '../../user/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('articles')
 export class Article {
   @ObjectIdColumn()
-  id: number;
+  id: string;
 
   @Column()
   title: string;
@@ -27,8 +29,6 @@ export class Article {
   @UpdateDateColumn({ name: 'updatedAt' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.articles, {
-    eager: true,
-  })
+  @ManyToOne(() => User, (user) => user.articles, { lazy: true })
   author: User;
 }

@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ObjectId,
   ObjectIdColumn,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,11 +11,15 @@ import {
 } from 'typeorm';
 
 import { Article } from '../../article/entities/article.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('users')
 export class User {
   @ObjectIdColumn()
-  id: number;
+  id: string;
+
+  @Column("ObjectId")
+  _id: ObjectId;
 
   @Column({ length: 100 })
   name: string;

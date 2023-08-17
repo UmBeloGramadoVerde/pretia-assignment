@@ -40,7 +40,7 @@ export class ArticleService {
     const actor: Actor = ctx.user;
     console.debug('actor', actor)
 
-    const user = await this.userService.getUserById(ctx, actor.id);
+    const user = await this.userService.findById(ctx, actor.id);
     console.debug('user', user)
 
     const isAllowed = this.aclService
@@ -85,7 +85,7 @@ export class ArticleService {
 
   async getArticleById(
     ctx: RequestContext,
-    id: number,
+    id: string,
   ): Promise<ArticleOutput> {
     this.logger.log(ctx, `${this.getArticleById.name} was called`);
 
@@ -108,7 +108,7 @@ export class ArticleService {
 
   async updateArticle(
     ctx: RequestContext,
-    articleId: number,
+    articleId: string,
     input: UpdateArticleInput,
   ): Promise<ArticleOutput> {
     this.logger.log(ctx, `${this.updateArticle.name} was called`);
@@ -138,7 +138,7 @@ export class ArticleService {
     });
   }
 
-  async deleteArticle(ctx: RequestContext, id: number): Promise<void> {
+  async deleteArticle(ctx: RequestContext, id: string): Promise<void> {
     this.logger.log(ctx, `${this.deleteArticle.name} was called`);
 
     this.logger.log(ctx, `calling ${ArticleRepository.name}.getById`);
