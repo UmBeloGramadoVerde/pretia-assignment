@@ -9,7 +9,6 @@ import { UserOutput } from '../dtos/user-output.dto';
 import { UpdateUserInput } from '../dtos/user-update-input.dto';
 import { User } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
-import { ObjectId } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -26,7 +25,6 @@ export class UserService {
     this.logger.log(ctx, `${this.createUser.name} was called`);
 
     const user = plainToClass(User, input);
-    console.debug('user', user)
 
     user.password = await hash(input.password, 10);
 
@@ -47,7 +45,6 @@ export class UserService {
 
     this.logger.log(ctx, `calling ${UserRepository.name}.findOne`);
     const user = await this.repository.findOne({ where: { username } });
-    console.debug('user', user)
     if (!user) throw new UnauthorizedException();
 
     const match = await compare(pass, user.password);
@@ -79,10 +76,21 @@ export class UserService {
     return { users: usersOutput, count };
   }
 
-  async findById(ctx: RequestContext, id: string): Promise<UserOutput> {
+  async findById(ctx: RequestContext, id: number): Promise<UserOutput> {
     this.logger.log(ctx, `${this.findById.name} was called`);
 
     this.logger.log(ctx, `calling ${UserRepository.name}.findOne`);
+    const user = await this.repository.findOne({ where: { id } });
+
+    return plainToClass(UserOutput, user, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  async getUserById(ctx: RequestContext, id: number): Promise<UserOutput> {
+    this.logger.log(ctx, `${this.getUserById.name} was called`);
+
+    this.logger.log(ctx, `calling ${UserRepository.name}.getById`);
     const user = await this.repository.getById(id);
 
     return plainToClass(UserOutput, user, {
@@ -106,7 +114,7 @@ export class UserService {
 
   async updateUser(
     ctx: RequestContext,
-    userId: string,
+    userId: number,
     input: UpdateUserInput,
   ): Promise<UserOutput> {
     this.logger.log(ctx, `${this.updateUser.name} was called`);

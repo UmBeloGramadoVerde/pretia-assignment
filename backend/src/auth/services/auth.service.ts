@@ -86,7 +86,6 @@ export class AuthService {
     user: UserAccessTokenClaims | UserOutput,
   ): AuthTokenOutput {
     this.logger.log(ctx, `${this.getAuthToken.name} was called`);
-    console.debug('ctx', ctx)
 
     const subject = { sub: user.id };
     const payload = {

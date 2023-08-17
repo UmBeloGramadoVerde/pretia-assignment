@@ -1,18 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { DataSource, MongoRepository, ObjectId as ObjectIDType, Repository } from "typeorm";
-import { ObjectId } from 'mongodb';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
 
-import { Article } from "../entities/article.entity";
+import { Article } from '../entities/article.entity';
 
 @Injectable()
-export class ArticleRepository extends MongoRepository<Article> {
+export class ArticleRepository extends Repository<Article> {
   constructor(private dataSource: DataSource) {
     super(Article, dataSource.createEntityManager());
   }
 
-  async getById(id: string): Promise<Article> {
-    console.debug('id', id)
-    const normalizedId = typeof id === "string" ? new ObjectId(id) : id;
+  async getById(id: number): Promise<Article> {
     const article = await this.findOne({ where: { id } });
     if (!article) {
       throw new NotFoundException();

@@ -85,7 +85,7 @@ export class ArticleService {
 
   async getArticleById(
     ctx: RequestContext,
-    id: string,
+    id: number,
   ): Promise<ArticleOutput> {
     this.logger.log(ctx, `${this.getArticleById.name} was called`);
 
@@ -108,7 +108,7 @@ export class ArticleService {
 
   async updateArticle(
     ctx: RequestContext,
-    articleId: string,
+    articleId: number,
     input: UpdateArticleInput,
   ): Promise<ArticleOutput> {
     this.logger.log(ctx, `${this.updateArticle.name} was called`);
@@ -138,7 +138,7 @@ export class ArticleService {
     });
   }
 
-  async deleteArticle(ctx: RequestContext, id: string): Promise<void> {
+  async deleteArticle(ctx: RequestContext, id: number): Promise<void> {
     this.logger.log(ctx, `${this.deleteArticle.name} was called`);
 
     this.logger.log(ctx, `calling ${ArticleRepository.name}.getById`);

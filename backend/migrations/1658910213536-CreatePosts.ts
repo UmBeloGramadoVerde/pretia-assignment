@@ -1,14 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateArticles1658910213536 implements MigrationInterface {
-    name = 'CreateArticles1658910213536';
+export class CreatePosts1658910213536 implements MigrationInterface {
+    name = 'CreatePosts1658910213536';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `CREATE TABLE "articles" (
+            `CREATE TABLE "posts" (
                 "id" SERIAL NOT NULL,
                 "title" character varying NOT NULL,
-                "post" character varying NOT NULL,
+                "content" character varying NOT NULL,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "authorId" integer,
@@ -16,14 +16,14 @@ export class CreateArticles1658910213536 implements MigrationInterface {
             )`,
         );
         await queryRunner.query(
-            `ALTER TABLE "articles" ADD CONSTRAINT "FK_65d9ccc1b02f4d904e90bd76a34" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+            `ALTER TABLE "posts" ADD CONSTRAINT "FK_65d9ccc1b02f4d904e90bd76a34" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
         );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `ALTER TABLE "articles" DROP CONSTRAINT "FK_65d9ccc1b02f4d904e90bd76a34"`,
+            `ALTER TABLE "posts" DROP CONSTRAINT "FK_65d9ccc1b02f4d904e90bd76a34"`,
         );
-        await queryRunner.query(`DROP TABLE "articles"`);
+        await queryRunner.query(`DROP TABLE "posts"`);
     }
 }

@@ -9,8 +9,6 @@ export default (): any => ({
     pass: process.env.DB_PASS,
   },
   jwt: {
-    /* publicKey: process.env.JWT_PUBLIC_KEY?.replace(/\\n/g, '\n'),
-    privateKey: process.env.JWT_PRIVATE_KEY?.replace(/\\n/g, '\n'), */
     publicKey: Buffer.from(
       process.env.JWT_PUBLIC_KEY_BASE64,
       'base64',

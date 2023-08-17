@@ -106,7 +106,7 @@ export class ArticleController {
   @UseGuards(JwtAuthGuard)
   async getArticle(
     @ReqContext() ctx: RequestContext,
-    @Param("id") id: string
+    @Param("id") id: number
   ): Promise<BaseApiResponse<ArticleOutput>> {
     this.logger.log(ctx, `${this.getArticle.name} was called`);
 
@@ -127,7 +127,7 @@ export class ArticleController {
   @UseGuards(JwtAuthGuard)
   async updateArticle(
     @ReqContext() ctx: RequestContext,
-    @Param("id") articleId: string,
+    @Param("id") articleId: number,
     @Body() input: UpdateArticleInput
   ): Promise<BaseApiResponse<ArticleOutput>> {
     const article = await this.articleService.updateArticle(
@@ -149,7 +149,7 @@ export class ArticleController {
   @UseGuards(JwtAuthGuard)
   async deleteArticle(
     @ReqContext() ctx: RequestContext,
-    @Param("id") id: string
+    @Param("id") id: number
   ): Promise<void> {
     this.logger.log(ctx, `${this.deleteArticle.name} was called`);
 
