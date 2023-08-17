@@ -1,0 +1,37 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+    environment:
+      - DB_HOST=mongo
+      - DB_NAME=cms_db
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      - MONGODB_DATABASE=cms_db
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27017:27017"
+    volumes:
+      - db:/data/db
+      - configdb:/data/configdb
+
+volumes:
+  db:
+  configdb:
