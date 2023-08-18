@@ -1,5 +1,5 @@
 import { AuthToken } from "@/types/authToken";
-import { CreatePostInput, Post } from "@/types/post";
+import { EditPostInput, Post } from "@/types/post";
 import {
   UseMutateFunction,
   useMutation,
@@ -7,39 +7,39 @@ import {
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 
-type IUseCreatePost = UseMutateFunction<Post, unknown, CreatePostInput, unknown>;
+type IUseEditPost = UseMutateFunction<Post, unknown, EditPostInput, unknown>;
 
-async function createPost(
-  post: CreatePostInput,
+async function editPost(
+  input: EditPostInput,
   tokens: AuthToken | null | undefined
   ): Promise<Post> {
-  console.debug('post', post)
+  console.debug('post', input)
   if (!tokens) throw new Error("No authToken");
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/articles`,
+    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/articles/${input.id}`,
     {
-      method: "POST",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tokens.accessToken}`,
       },
-      body: JSON.stringify(post),
+      body: JSON.stringify(input.post),
     }
   );
-  if (!response.ok) throw new Error("Failed on create post request");
+  if (!response.ok) throw new Error("Failed on edit post request");
 
   return await response.json().then(r=>r.data);
 }
 
-export function useCreatePost(): IUseCreatePost {
+export function useEditPost(): IUseEditPost {
   const queryClient = useQueryClient();
   const { getAuthStorage } = useStorage();
 
-  const { mutate: createPostMutation } = useMutation<Post, unknown, CreatePostInput, unknown>(
-    (post: CreatePostInput) => createPost(post, getAuthStorage()),
+  const { mutate: editPostMutation } = useMutation<Post, unknown, EditPostInput, unknown>(
+    (input: EditPostInput) => editPost(input, getAuthStorage()),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData(["post", data.id], data);
+        queryClient.setQueryData(["post", data.title], data);
       },
       onError: (error) => {
         throw new Error("Failed on sign in request" + error);
@@ -47,5 +47,5 @@ export function useCreatePost(): IUseCreatePost {
     }
   );
 
-  return createPostMutation;
+  return editPostMutation;
 }

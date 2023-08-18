@@ -10,6 +10,7 @@ export function useStorage() {
   }
 
   function getUserStorage(): User | undefined {
+    if (!window) return undefined;
     const user = localStorage.getItem(USER_STORAGE_KEY);
     return user ? JSON.parse(user) : undefined;
   }

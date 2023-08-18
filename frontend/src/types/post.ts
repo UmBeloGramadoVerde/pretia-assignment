@@ -1,8 +1,12 @@
+export interface EditPostInput {
+  post: CreatePostInput;
+  id: number;
+}
 export interface CreatePostInput {
   title: string;
   content: string;
 }
-export interface PostApi {
+export interface Post {
   id: number;
   title: string;
   content: string;

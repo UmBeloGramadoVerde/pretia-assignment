@@ -1,10 +1,5 @@
 "use client";
 
-const TransactionSummaryTable = React.lazy(
-  () => import("@/components/TransactionSummaryTable/TransactionSummaryTable")
-);
-import { useTransactions } from "@/hooks/useTransactions";
-import { useEurRates } from "@/hooks/useEurRates";
 import Loader from "@/components/Loader/Loader";
 import React, { Suspense } from "react";
 import { useForm } from "react-hook-form";
@@ -12,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,7 +18,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,28 +26,49 @@ import {
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreatePost } from "@/hooks/useCreatePost";
+import { Post } from "@/types/post";
+import { useEditPost } from "@/hooks/useEditPost";
+import { useDeletePost } from "@/hooks/useDeletePost";
+import RemoveButton from "../RemoveButton/RemoveButton";
 
 const formSchema = z.object({
   title: z.string(),
   content: z.string(),
 });
 
-export default function EditPostComponent() {
+interface EditPostProps {
+  post?: Post;
+}
+
+const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
+  console.debug("post", post);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      content: "",
+      title: post?.title ?? "",
+      content: post?.content ?? "",
     },
   });
   const router = useRouter();
-  const createPost = useCreatePost()
-  const onSubmit = (values: z.infer<typeof formSchema>) => createPost(values);
+  const createPost = useCreatePost();
+  const editPost = useEditPost();
+  const deletePost = useDeletePost();
+  const onSubmit = (values: z.infer<typeof formSchema>) =>
+    post ? editPost({ post: values, id: post.id }) : createPost(values);
   return (
     <Card className="max-w-[90%] w-full">
-      <CardHeader>
-        <CardTitle>New Post</CardTitle>
-        <CardDescription>Fill out your information below</CardDescription>
+      <CardHeader className="relative m-6 p-0">
+        <div>
+          <CardTitle className="mb-3">{`${post ? "Edit" : "New"} Post`}</CardTitle>
+          <CardDescription>{`${
+            post ? "Edit" : "Fill"
+          } out your information below`}</CardDescription>
+        </div>
+        {post?.id && (
+          <div className="absolute top-0 right-0 !mt-0">
+            <RemoveButton removeFn={() => deletePost(post.id)}/>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -107,7 +121,7 @@ export default function EditPostComponent() {
                 Cancel
               </Button>
               <Button type="submit" className="px-5">
-                Post
+                {post ? "Confirm" : "Post"}
               </Button>
             </div>
           </form>
@@ -115,4 +129,6 @@ export default function EditPostComponent() {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default EditPostComponent;

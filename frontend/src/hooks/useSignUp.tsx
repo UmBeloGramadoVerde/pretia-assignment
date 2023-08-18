@@ -27,9 +27,7 @@ async function signUp(signUpInput: SignUpInput): Promise<AuthToken> {
 }
 
 export function useSignUp(): IUseSignUp {
-  const queryClient = useQueryClient();
-
-  const { mutate: signInMutation } = useMutation<
+  const { mutate: signUpMutation } = useMutation<
     AuthToken,
     unknown,
     SignUpInput,
@@ -41,5 +39,5 @@ export function useSignUp(): IUseSignUp {
     },
   });
 
-  return signInMutation;
+  return signUpMutation;
 }

@@ -89,17 +89,8 @@ export class ArticleService {
   ): Promise<ArticleOutput> {
     this.logger.log(ctx, `${this.getArticleById.name} was called`);
 
-    const actor: Actor = ctx.user;
-
     this.logger.log(ctx, `calling ${ArticleRepository.name}.getById`);
     const article = await this.repository.getById(id);
-
-    const isAllowed = this.aclService
-      .forActor(actor)
-      .canDoAction(Action.Read, article);
-    if (!isAllowed) {
-      throw new UnauthorizedException();
-    }
 
     return plainToClass(ArticleOutput, article, {
       excludeExtraneousValues: true,

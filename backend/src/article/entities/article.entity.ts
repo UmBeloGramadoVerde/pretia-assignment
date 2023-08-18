@@ -5,11 +5,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { User } from '../../user/entities/user.entity';
+import { User } from "../../user/entities/user.entity";
 
-@Entity('posts')
+@Entity("posts")
 export class Article {
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,12 +18,25 @@ export class Article {
   title: string;
 
   @Column()
-  content: string;
+  textContent: string;
 
-  @CreateDateColumn({ name: 'createdAt' })
+  @Column("jsonb", {
+    nullable: true,
+    transformer: {
+      to(value: object): string {
+        return JSON.stringify(value);
+      },
+      from(value: string): object {
+        return JSON.parse(value);
+      },
+    },
+  })
+  jsonContent?: object;
+
+  @CreateDateColumn({ name: "createdAt" })
   createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updatedAt' })
+  @UpdateDateColumn({ name: "updatedAt" })
   updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.articles, {

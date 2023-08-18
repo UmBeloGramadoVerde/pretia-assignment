@@ -33,23 +33,9 @@ const Header = () => {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
               <Link href="/all-posts">
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   All Posts
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/my-posts">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  My Posts
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>

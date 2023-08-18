@@ -103,7 +103,6 @@ export class ArticleController {
     type: BaseApiErrorResponse,
   })
   @UseInterceptors(ClassSerializerInterceptor)
-  @UseGuards(JwtAuthGuard)
   async getArticle(
     @ReqContext() ctx: RequestContext,
     @Param("id") id: number
