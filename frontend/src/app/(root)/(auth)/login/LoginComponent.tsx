@@ -40,7 +40,7 @@ export default function LoginComponent() {
   });
   const router = useRouter();
   const signIn = useSignIn();
-  const onSubmit = (values: z.infer<typeof formSchema>) => signIn(values);
+  const onSubmit = (values: z.infer<typeof formSchema>) => console.log(signIn(values));
   return (
     <Card className="max-w-[350px] w-full">
       <CardHeader>

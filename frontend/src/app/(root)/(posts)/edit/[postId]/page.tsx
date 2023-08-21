@@ -21,7 +21,6 @@ export default function EditPostPage({
       ) : (
         <div>
           <Loader />
-          {/* <Button onClick={()=>router.refresh()}>Retry ↻</Button> */}
         </div>
       )}
     </div>

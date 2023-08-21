@@ -2,12 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 import { User } from "../../user/entities/user.entity";
+import { File } from "./file.entity";
 
 @Entity("posts")
 export class Article {
@@ -38,6 +41,10 @@ export class Article {
 
   @UpdateDateColumn({ name: "updatedAt" })
   updatedAt: Date;
+
+  @OneToOne(() => File, (file) => file.path, { cascade: true, eager: true })
+  @JoinColumn()
+  imageContent: File;
 
   @ManyToOne(() => User, (user) => user.articles, {
     eager: true,

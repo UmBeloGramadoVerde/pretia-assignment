@@ -10,19 +10,31 @@ export class CreateArticleInput {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  content: string;
+  textContent: string;
+  
+  @ApiProperty()
+  @IsString()
+  jsonContent: string;
+
+  @ApiProperty()
+  imageContent: string;
 }
 
 export class UpdateArticleInput {
   @ApiProperty()
-  @IsOptional()
   @IsNotEmpty()
   @IsString()
   title: string;
 
   @ApiProperty()
-  @IsOptional()
   @IsNotEmpty()
   @IsString()
-  content: string;
+  textContent: string;
+  
+  @ApiProperty()
+  @IsString()
+  jsonContent: string;
+
+  @ApiProperty()
+  imageContent: string;
 }

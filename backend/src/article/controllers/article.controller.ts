@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Res,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -35,6 +37,13 @@ import {
 } from "../dtos/article-input.dto";
 import { ArticleOutput } from "../dtos/article-output.dto";
 import { ArticleService } from "../services/article.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
+import {
+  editFileName,
+  imageFileFilter,
+} from "src/shared/utils/file-upload.utils";
+import { diskStorage } from "multer";
 
 @ApiTags("articles")
 @Controller("articles")
@@ -55,14 +64,23 @@ export class ArticleController {
     type: SwaggerBaseApiResponse(ArticleOutput),
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(
+    FileInterceptor("imageContent", {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    })
+  )
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async createArticle(
     @ReqContext() ctx: RequestContext,
-    @Body() input: CreateArticleInput
-    ): Promise<BaseApiResponse<ArticleOutput>> {
-    console.debug('ctx.user', ctx.user)
-    const article = await this.articleService.createArticle(ctx, input);
+    @Body() input: CreateArticleInput,
+    @UploadedFile() image: Express.Multer.File
+  ): Promise<BaseApiResponse<ArticleOutput>> {
+    const article = await this.articleService.createArticle(ctx, input, image);
     return { data: article, meta: {} };
   }
 
@@ -122,17 +140,29 @@ export class ArticleController {
     type: SwaggerBaseApiResponse(ArticleOutput),
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(
+    FileInterceptor("imageContent", {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    })
+  )
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async updateArticle(
     @ReqContext() ctx: RequestContext,
     @Param("id") articleId: number,
-    @Body() input: UpdateArticleInput
+    @Body() input: UpdateArticleInput,
+    @UploadedFile() image: Express.Multer.File
   ): Promise<BaseApiResponse<ArticleOutput>> {
+    console.debug("image", image);
     const article = await this.articleService.updateArticle(
       ctx,
       articleId,
-      input
+      input,
+      image
     );
     return { data: article, meta: {} };
   }

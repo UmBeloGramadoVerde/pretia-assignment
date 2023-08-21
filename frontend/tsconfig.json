@@ -25,6 +25,7 @@
       "@/types/*": ["./src/types/*"],
       "@/utils": ["./src/lib/utils"],
       "@/components/*": ["./src/components/*"],
+      "@/contexts/*": ["./src/contexts/*"],
       "@/ui/*": ["./src/components/ui/*"]
     }
   },

@@ -4,12 +4,18 @@ export interface EditPostInput {
 }
 export interface CreatePostInput {
   title: string;
-  content: string;
+  textContent: string;
+  jsonContent?: any;
+  imageContent?: any;
 }
 export interface Post {
   id: number;
   title: string;
-  content: string;
+  textContent: string;
+  jsonContent: any;
+  imageContent: {
+    path: string
+  };
   createdAt: string;
   updatedAt: string;
   author: {

@@ -7,6 +7,9 @@ import { configModuleOptions } from "./configs/module-options";
 import { AllExceptionsFilter } from "./filters/all-exceptions.filter";
 import { LoggingInterceptor } from "./interceptors/logging.interceptor";
 import { AppLoggerModule } from "./logger/logger.module";
+import { MulterModule } from "@nestjs/platform-express";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
   imports: [
@@ -25,6 +28,11 @@ import { AppLoggerModule } from "./logger/logger.module";
         timezone: 'Z',
         synchronize: false,
         debug: configService.get<string>('env') === 'development',
+      }),
+    }),
+    MulterModule.registerAsync({
+      useFactory: () => ({
+        dest: './upload',
       }),
     }),
     AppLoggerModule,

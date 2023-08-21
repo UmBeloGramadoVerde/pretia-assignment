@@ -23,7 +23,10 @@ async function signIn(signInInput: SignInInput): Promise<AuthToken> {
   if (!response.ok)
     throw new Error("Failed on sign in request" + JSON.stringify(response));
 
-  return await response.json().then((r) => r.data);
+  return await response.json().then((r) => {
+    console.log(r);
+    return r.data;
+  });
 }
 
 export function useSignIn(): IUseSignIn {
@@ -39,6 +42,7 @@ export function useSignIn(): IUseSignIn {
     onSuccess: (response) => {
       saveAuthStorage(response);
       queryClient.setQueryData(["auth"], response);
+      return response
     },
     onError: (error) => {
       throw new Error("Failed on sign in request" + error);

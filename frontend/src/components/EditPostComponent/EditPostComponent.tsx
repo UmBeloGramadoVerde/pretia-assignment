@@ -1,7 +1,5 @@
 "use client";
-
-import Loader from "@/components/Loader/Loader";
-import React, { Suspense } from "react";
+import React, { Suspense, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -12,9 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import CodeEditor from "@uiw/react-textarea-code-editor";
 import {
   Form,
   FormControl,
@@ -30,10 +28,13 @@ import { Post } from "@/types/post";
 import { useEditPost } from "@/hooks/useEditPost";
 import { useDeletePost } from "@/hooks/useDeletePost";
 import RemoveButton from "../RemoveButton/RemoveButton";
+import { ThemeContext } from "@/contexts/ThemeContextProvider";
 
 const formSchema = z.object({
   title: z.string(),
-  content: z.string(),
+  textContent: z.string(),
+  jsonContent: z.any(),
+  imageContent: z.any(),
 });
 
 interface EditPostProps {
@@ -42,11 +43,15 @@ interface EditPostProps {
 
 const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   console.debug("post", post);
+  const { isDarkMode } = useContext(ThemeContext);
+  const [image, setImage] = useState(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: post?.title ?? "",
-      content: post?.content ?? "",
+      textContent: post?.textContent ?? "",
+      jsonContent: post?.jsonContent ?? "",
+      imageContent:  "",
     },
   });
   const router = useRouter();
@@ -54,19 +59,31 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   const editPost = useEditPost();
   const deletePost = useDeletePost();
   const onSubmit = (values: z.infer<typeof formSchema>) =>
-    post ? editPost({ post: values, id: post.id }) : createPost(values);
+    post
+      ? editPost({ post: { ...values, imageContent: image }, id: post.id })
+      : createPost({ ...values, imageContent: image });
+
+  const handleImageChange = (event: any) => {
+    console.debug("event", event);
+    console.debug("event.target.files[0]", event.target.files[0]);
+    const selectedImage = event.target.files[0];
+    setImage(selectedImage);
+  };
+
   return (
     <Card className="max-w-[90%] w-full">
       <CardHeader className="relative m-6 p-0">
         <div>
-          <CardTitle className="mb-3">{`${post ? "Edit" : "New"} Post`}</CardTitle>
+          <CardTitle className="mb-3">{`${
+            post ? "Edit" : "New"
+          } Post`}</CardTitle>
           <CardDescription>{`${
             post ? "Edit" : "Fill"
           } out your information below`}</CardDescription>
         </div>
         {post?.id && (
           <div className="absolute top-0 right-0 !mt-0">
-            <RemoveButton removeFn={() => deletePost(post.id)}/>
+            <RemoveButton removeFn={() => deletePost(post.id)} />
           </div>
         )}
       </CardHeader>
@@ -82,16 +99,13 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
                   <FormControl>
                     <Input placeholder="Your title goes here." {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="content"
+              name="textContent"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Post Content</FormLabel>
@@ -101,9 +115,45 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
                       {...field}
                     />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="jsonContent"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Json Content (Optional)</FormLabel>
+                  <FormControl>
+                    <CodeEditor
+                      data-color-mode={isDarkMode ? "dark" : "light"}
+                      language="js"
+                      placeholder="Type your JSON content here."
+                      padding={15}
+                      className="font-[inherent] !bg-transparent rounded-md border border-border"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="imageContent"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image (Optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      id="picture"
+                      type="file"
+                      {...field}
+                      accept="image/png, image/jpeg, image/jpg"
+                      onChange={handleImageChange}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

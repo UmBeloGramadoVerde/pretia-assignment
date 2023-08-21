@@ -35,6 +35,7 @@ async function deletePost(
 }
 
 export function useDeletePost(): IUseDeletePost {
+  const queryClient = useQueryClient();
   const { getAuthStorage } = useStorage();
 
   const { mutate: deletePostMutation } = useMutation<
@@ -43,7 +44,9 @@ export function useDeletePost(): IUseDeletePost {
     number,
     unknown
   >((postId: number) => deletePost(postId, getAuthStorage()), {
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
     onError: (error) => {
       throw new Error("Failed on sign in request" + error);
     },

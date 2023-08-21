@@ -63,9 +63,6 @@ export default function RegisterComponent() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -79,9 +76,6 @@ export default function RegisterComponent() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -109,9 +103,6 @@ export default function RegisterComponent() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your private password.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}

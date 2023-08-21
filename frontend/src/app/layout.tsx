@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import QueryWrapper from "@/components/QueryWrapper/QueryWrapper";
+import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <link rel="icon" href="/images/favicon.ico" sizes="any" />
       <body className={inter.className}>
-        <QueryWrapper>{children}</QueryWrapper>
+        <ThemeContextProvider>
+          <QueryWrapper>{children}</QueryWrapper>
+        </ThemeContextProvider>
       </body>
     </html>
   );

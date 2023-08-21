@@ -9,6 +9,8 @@ import { Article } from './entities/article.entity';
 import { ArticleRepository } from './repositories/article.repository';
 import { ArticleService } from './services/article.service';
 import { ArticleAclService } from './services/article-acl.service';
+import { FileService } from './services/file.service';
+import { FileRepository } from './repositories/file.repository';
 
 @Module({
   imports: [SharedModule, TypeOrmModule.forFeature([Article]), UserModule],
@@ -16,9 +18,11 @@ import { ArticleAclService } from './services/article-acl.service';
     ArticleService,
     JwtAuthStrategy,
     ArticleAclService,
+    FileService,
     ArticleRepository,
+    FileRepository
   ],
   controllers: [ArticleController],
-  exports: [ArticleService],
+  exports: [ArticleService, FileService],
 })
 export class ArticleModule {}

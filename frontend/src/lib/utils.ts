@@ -19,6 +19,10 @@ export function applyPrecision(floatNumber: number): number | string {
   return floatNumber.toFixed(2);
 }
 
+export function getImageLink(apiImageFilename: string): string {
+  return `${process.env.NEXT_PUBLIC_BASE_API_URL}/${apiImageFilename}`;
+}
+
 export const storage = {
   getToken: () => JSON.parse(window.localStorage.getItem('token') || 'null'),
   setToken: (token: any) =>
