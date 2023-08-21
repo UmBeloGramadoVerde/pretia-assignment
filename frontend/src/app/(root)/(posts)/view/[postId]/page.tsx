@@ -1,8 +1,8 @@
 "use client";
 
 import Loader from "@/components/Loader/Loader";
+import PostDisplay from "@/components/PostDisplay/PostDisplay";
 import { usePost } from "@/hooks/usePost";
-import EditPostComponent from "./EditPostComponent/EditPostComponent";
 
 export default function EditPostPage({
   params,
@@ -13,7 +13,7 @@ export default function EditPostPage({
   return (
     <div className="flex justify-center">
       {post.id ? (
-        <EditPostComponent post={post} />
+        <PostDisplay post={post} />
       ) : (
         <div>
           <Loader />

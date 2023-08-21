@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { useSignIn } from "@/hooks/useSignIn";
+import Loader from "@/components/Loader/Loader";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -39,10 +40,13 @@ export default function LoginComponent() {
     },
   });
   const router = useRouter();
-  const signIn = useSignIn();
-  const onSubmit = (values: z.infer<typeof formSchema>) => console.log(signIn(values));
+  const { signInMutation: signIn, loading, result } = useSignIn();
+  const onSubmit = (values: z.infer<typeof formSchema>) => signIn(values);
+  useEffect(() => {
+    result?.accessToken ? router.push("/") : null;
+  }, [result]);
   return (
-    <Card className="max-w-[350px] w-full">
+    <Card className="max-w-[350px] w-full relative">
       <CardHeader>
         <CardTitle>Login</CardTitle>
         <CardDescription>Enter your credentials below</CardDescription>
@@ -59,9 +63,6 @@ export default function LoginComponent() {
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -75,9 +76,6 @@ export default function LoginComponent() {
                   <FormControl>
                     <Input {...field} type="password" />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your private password.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -102,6 +100,11 @@ export default function LoginComponent() {
           </form>
         </Form>
       </CardContent>
+      {loading && (
+        <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
+          <Loader className="opacity-100 bg-background" />
+        </div>
+      )}
     </Card>
   );
 }

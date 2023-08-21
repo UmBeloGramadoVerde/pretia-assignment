@@ -1,6 +1,6 @@
 "use client";
 
-import EditPostComponent from "@/components/EditPostComponent/EditPostComponent";
+import EditPostComponent from "@/app/(root)/(posts)/edit/[postId]/EditPostComponent/EditPostComponent";
 
 export default function WritePostPage() {
   return (

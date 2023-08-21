@@ -147,7 +147,7 @@ export class ArticleService {
     const savedArticle = await this.repository.save(updatedArticle);
 
     if (image) {
-      if (previousImageContent.id) {
+      if (previousImageContent && previousImageContent.id) {
         this.fileService.removeFile(plainToClass(File, previousImageContent));
       }
     }

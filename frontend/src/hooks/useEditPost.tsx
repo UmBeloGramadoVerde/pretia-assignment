@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 import axios from "axios";
+import { POST_QUERY_KEY } from "./usePost";
+import { POSTS_QUERY_KEY } from "./usePosts";
 
 type IUseEditPost = UseMutateFunction<Post, unknown, EditPostInput, unknown>;
 
@@ -45,8 +47,8 @@ export function useEditPost(): IUseEditPost {
     {
       onSuccess: (data) => {
         console.debug('data', data)
-        queryClient.setQueryData(["post", data.id], data);
-        queryClient.invalidateQueries({ queryKey: ['posts'] })
+        queryClient.setQueryData([POST_QUERY_KEY, data.id], data);
+        queryClient.invalidateQueries({ queryKey: [POSTS_QUERY_KEY] })
       },
       onError: (error) => {
         throw new Error("Failed on sign in request" + error);

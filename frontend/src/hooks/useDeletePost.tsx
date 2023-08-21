@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
+import { POSTS_QUERY_KEY } from "./usePosts";
 
 type IUseDeletePost = UseMutateFunction<
   unknown,
@@ -45,7 +46,7 @@ export function useDeletePost(): IUseDeletePost {
     unknown
   >((postId: number) => deletePost(postId, getAuthStorage()), {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] })
+      queryClient.invalidateQueries({ queryKey: [POSTS_QUERY_KEY] })
     },
     onError: (error) => {
       throw new Error("Failed on sign in request" + error);

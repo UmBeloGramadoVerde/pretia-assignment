@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 import axios from "axios";
+import { POST_QUERY_KEY } from "./usePost";
+import { POSTS_QUERY_KEY } from "./usePosts";
 
 type IUseCreatePost = UseMutateFunction<
   Post,
@@ -52,7 +54,8 @@ export function useCreatePost(): IUseCreatePost {
     unknown
   >((post: CreatePostInput) => createPost(post, getAuthStorage()), {
     onSuccess: (data) => {
-      queryClient.setQueryData(["post", data.id], data);
+      queryClient.setQueryData([POST_QUERY_KEY, data.id], data);
+      queryClient.invalidateQueries({ queryKey: [POSTS_QUERY_KEY] })
     },
     onError: (error) => {
       throw new Error("Failed on sign in request" + error);

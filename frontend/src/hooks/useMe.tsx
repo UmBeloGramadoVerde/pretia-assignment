@@ -5,8 +5,11 @@ import { useEffect } from "react";
 import { AuthToken } from "@/types/authToken";
 import { useApi } from "./useApi";
 
+export const ME_QUERY_KEY = "me";
+
 interface IUseUser {
   me: User | null;
+  logout: () => void;
 }
 
 async function getMe(
@@ -28,11 +31,17 @@ async function getMe(
 }
 
 export function useMe(): IUseUser {
-  const { saveUserStorage, removeUserStorage, getUserStorage, getAuthStorage } =
-    useStorage();
+  const queryClient = useQueryClient();
+  const {
+    saveUserStorage,
+    removeUserStorage,
+    getUserStorage,
+    getAuthStorage,
+    removeAuthStorage,
+  } = useStorage();
 
   const { data: user } = useQuery(
-    ["user"],
+    [ME_QUERY_KEY],
     async (): Promise<User | null> => getMe(getAuthStorage()),
     {
       refetchOnMount: false,
@@ -45,6 +54,12 @@ export function useMe(): IUseUser {
     }
   );
 
+  const logout = () => {
+    queryClient.setQueryData([ME_QUERY_KEY], null);
+    removeUserStorage();
+    removeAuthStorage;
+  };
+
   useEffect(() => {
     if (!user) removeUserStorage();
     else saveUserStorage(user);
@@ -52,5 +67,6 @@ export function useMe(): IUseUser {
 
   return {
     me: user ?? null,
+    logout,
   };
 }

@@ -17,21 +17,16 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@/ui/dropdown-menu";
+import { useMe } from "@/hooks/useMe";
 
 const Header = () => {
+  const { me } = useMe();
   return (
     <div className="p-5 flex justify-between items-center border-b border-border">
       <h1 className="text-2xl">Pretia Assesment</h1>
       <section className="hidden md:block">
         <NavigationMenu>
           <NavigationMenuList className="gap-3">
-            <NavigationMenuItem>
-              <Link href="/login">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Login
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
             <NavigationMenuItem>
               <Link href="/all-posts">
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -46,13 +41,23 @@ const Header = () => {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/profile">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  My Profile
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
+            {me ? (
+              <NavigationMenuItem>
+                <Link href="/profile">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    My Profile
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            ) : (
+              <NavigationMenuItem>
+                <Link href="/login">
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Login
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
       </section>

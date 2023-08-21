@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { useSignUp } from "@/hooks/useSignUp";
+import Loader from "@/components/Loader/Loader";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -43,10 +44,13 @@ export default function RegisterComponent() {
     },
   });
   const router = useRouter();
-  const signUp = useSignUp();
+  const { signUpMutation: signUp, loading, result } = useSignUp();
   const onSubmit = (values: z.infer<typeof formSchema>) => signUp(values);
+  useEffect(() => {
+    result?.id ? router.push("/login") : null;
+  }, [result]);
   return (
-    <Card className="max-w-[350px] w-full">
+    <Card className="max-w-[350px] w-full relative">
       <CardHeader>
         <CardTitle>Register</CardTitle>
         <CardDescription>Fill out your information below</CardDescription>
@@ -126,6 +130,11 @@ export default function RegisterComponent() {
           </form>
         </Form>
       </CardContent>
+      {loading && (
+        <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
+          <Loader className="opacity-100 bg-background" />
+        </div>
+      )}
     </Card>
   );
 }

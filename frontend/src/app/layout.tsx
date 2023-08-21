@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import QueryWrapper from "@/components/QueryWrapper/QueryWrapper";
+import { Toaster } from "@/components/ui/toaster";
 import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeContextProvider>
           <QueryWrapper>{children}</QueryWrapper>
+          <Toaster />
         </ThemeContextProvider>
       </body>
     </html>

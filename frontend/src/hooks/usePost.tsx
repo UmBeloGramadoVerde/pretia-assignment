@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Post } from "@/types/post";
 import { BaseApiResponse } from "@/types/api";
 
+export const POST_QUERY_KEY = "post";
+
 interface IUsePost {
   post: Post;
   meta: any;
@@ -19,7 +21,7 @@ async function getPost(id: string): Promise<BaseApiResponse<Post>> {
 
 export function usePost(id: string): IUsePost {
   const { data: postAndMeta } = useQuery(
-    ["post", id],
+    [POST_QUERY_KEY, id],
     async (): Promise<BaseApiResponse<Post>> => getPost(id),
     {
       initialData: () => ({ data: {} as Post, meta: {} }),

@@ -27,8 +27,9 @@ import { useCreatePost } from "@/hooks/useCreatePost";
 import { Post } from "@/types/post";
 import { useEditPost } from "@/hooks/useEditPost";
 import { useDeletePost } from "@/hooks/useDeletePost";
-import RemoveButton from "../RemoveButton/RemoveButton";
+import RemoveButton from "../../../../../../components/RemoveButton/RemoveButton";
 import { ThemeContext } from "@/contexts/ThemeContextProvider";
+import ImageFileDisplay from "@/components/ImageFileDisplay/ImageFileDisplay";
 
 const formSchema = z.object({
   title: z.string(),
@@ -44,14 +45,14 @@ interface EditPostProps {
 const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   console.debug("post", post);
   const { isDarkMode } = useContext(ThemeContext);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(post?.imageContent?.path ?? null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: post?.title ?? "",
       textContent: post?.textContent ?? "",
       jsonContent: post?.jsonContent ?? "",
-      imageContent:  "",
+      imageContent: post?.imageContent?.path ?? "",
     },
   });
   const router = useRouter();
@@ -66,8 +67,17 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   const handleImageChange = (event: any) => {
     console.debug("event", event);
     console.debug("event.target.files[0]", event.target.files[0]);
-    const selectedImage = event.target.files[0];
-    setImage(selectedImage);
+    try {
+      const selectedImage = event.target.files[0];
+      setImage(selectedImage);
+    } catch (error) {
+      setImage(null);
+    }
+  };
+
+  const removeImageFn = () => {
+    form.setValue("imageContent", "");
+    setImage(null);
   };
 
   return (
@@ -146,13 +156,20 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
                 <FormItem>
                   <FormLabel>Image (Optional)</FormLabel>
                   <FormControl>
-                    <Input
-                      id="picture"
-                      type="file"
-                      {...field}
-                      accept="image/png, image/jpeg, image/jpg"
-                      onChange={handleImageChange}
-                    />
+                    {image ? (
+                      <ImageFileDisplay
+                        image={image}
+                        removeImageFn={removeImageFn}
+                      />
+                    ) : (
+                      <Input
+                        id="picture"
+                        type="file"
+                        {...field}
+                        accept="image/png, image/jpeg, image/jpg"
+                        onChange={handleImageChange}
+                      />
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>

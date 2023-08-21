@@ -1,12 +1,14 @@
 "use client";
 
+import Loader from "@/components/Loader/Loader";
+import LogoutButton from "@/components/LogoutButton/LogoutButton";
+import RemoveButton from "@/components/RemoveButton/RemoveButton";
 import { Badge } from "@/components/ui/badge";
 import { useMe } from "@/hooks/useMe";
 import { formatDate } from "@/utils";
-import { Loader } from "lucide-react";
 
 export default function ProfilePage() {
-  const { me } = useMe();
+  const { me, logout } = useMe();
   console.debug("me", me);
   return (
     <>
@@ -31,11 +33,18 @@ export default function ProfilePage() {
           </div>
           <div className="flex gap-3">
             <h3>Roles:</h3>
-            <span>{me.roles.map(role=><Badge>{role}</Badge>)}</span>
+            <span>
+              {me.roles.map((role) => (
+                <Badge>{role}</Badge>
+              ))}
+            </span>
           </div>
+          <LogoutButton />
         </div>
       ) : (
+        <div className="flex justify-center">
         <Loader />
+        </div>
       )}
     </>
   );

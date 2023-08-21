@@ -7,6 +7,8 @@ import { useApi } from "./useApi";
 import { Post } from "@/types/post";
 import { BaseApiResponse } from "@/types/api";
 
+export const POSTS_QUERY_KEY = "posts";
+
 interface IUsePosts {
   posts: Post[];
   meta: any;
@@ -24,7 +26,7 @@ async function getPosts(): Promise<BaseApiResponse<Post[]>> {
 
 export function usePosts(): IUsePosts {
   const { data: postsAndMeta } = useQuery(
-    ["posts"],
+    [POSTS_QUERY_KEY],
     async (): Promise<BaseApiResponse<Post[]>> => getPosts(),
     {
       initialData: () => ({ data: [], meta: {} }),

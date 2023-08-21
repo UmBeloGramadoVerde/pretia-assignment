@@ -28,7 +28,7 @@ const RemoveButton: React.FC<RemoveButtonProps> = ({ removeFn }) => {
   return (
     <Dialog onOpenChange={onOpenChange} open={isOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-fit">
+        <Button variant="destructive" className="w-fit">
           <TrashIcon size={14}/>
         </Button>
       </DialogTrigger>
@@ -36,7 +36,7 @@ const RemoveButton: React.FC<RemoveButtonProps> = ({ removeFn }) => {
         <DialogHeader>
           <DialogTitle>Confirm Deletion</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete your post?
+            Are you sure you want to delete?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-3">

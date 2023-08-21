@@ -6,10 +6,17 @@ import {
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 import { AuthToken } from "@/types/authToken";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { AUTH_QUERY_KEY } from "./useSignIn";
 
-type IUseSignUp = UseMutateFunction<AuthToken, unknown, SignUpInput, unknown>;
+type IUseSignUp = {
+  signUpMutation: UseMutateFunction<User, Error, SignUpInput, unknown>;
+  loading: boolean;
+  result: User | null;
+};
 
-async function signUp(signUpInput: SignUpInput): Promise<AuthToken> {
+async function signUp(signUpInput: SignUpInput): Promise<User> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/auth/register`,
     {
@@ -20,24 +27,43 @@ async function signUp(signUpInput: SignUpInput): Promise<AuthToken> {
       body: JSON.stringify(signUpInput),
     }
   );
+  const jsonResponse = await response.json();
   if (!response.ok)
-    throw new Error("Failed on sign in request" + JSON.stringify(response));
+    throw new Error("Failed on sign up request: " + jsonResponse.error.message);
 
-  return await response.json().then((r) => r.data);
+  return jsonResponse.data;
 }
 
 export function useSignUp(): IUseSignUp {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<User | null>(null);
   const { mutate: signUpMutation } = useMutation<
-    AuthToken,
-    unknown,
+    User,
+    Error,
     SignUpInput,
     unknown
-  >((signUpInput) => signUp(signUpInput), {
-    onSuccess: (response) => {},
-    onError: (error) => {
-      throw new Error("Failed on sign up request" + error);
+  >(
+    (signUpInput) => {
+      setLoading(true);
+      return signUp(signUpInput);
     },
-  });
+    {
+      onSuccess: (response) => {
+        queryClient.setQueryData([AUTH_QUERY_KEY], response);
+        setLoading(false);
+        setResult(response);
+      },
+      onError: (error: Error) => {
+        toast({
+          variant: "destructive",
+          description: error.message,
+        });
+        setLoading(false);
+      },
+    }
+  );
 
-  return signUpMutation;
+  return { signUpMutation, loading, result };
 }
