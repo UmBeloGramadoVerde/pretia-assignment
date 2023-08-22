@@ -9,6 +9,7 @@ import { AuthToken } from "@/types/authToken";
 import { useState } from "react";
 import { ME_QUERY_KEY, useMe } from "./useMe";
 import { useToast } from "@/components/ui/use-toast";
+import { useApi } from "./useApi";
 
 export const AUTH_QUERY_KEY = "auth";
 
@@ -21,42 +22,8 @@ type UseAuthInterface = {
   resultSignUp: User | null;
 };
 
-async function signUp(signUpInput: SignUpInput): Promise<User> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/auth/register`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signUpInput),
-    }
-  );
-  const jsonResponse = await response.json();
-  if (!response.ok)
-    throw new Error("Failed on sign up request: " + jsonResponse.error.message);
-
-  return jsonResponse.data;
-}
-
-async function signIn(signInInput: SignInInput): Promise<AuthToken> {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/auth/login`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signInInput),
-    }
-  );
-  if (!response.ok)
-    throw new Error("Failed on sign in request" + JSON.stringify(response));
-
-  return await response.json().then((r) => r.data);
-}
-
 export function useAuth(): UseAuthInterface {
+  const api = useApi();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { saveAuthStorage } = useStorage();
@@ -73,7 +40,7 @@ export function useAuth(): UseAuthInterface {
   >(
     (signInInput) => {
       setLoadingSignIn(true);
-      return signIn(signInInput);
+      return api.post("/api/auth/login", JSON.stringify(signInInput));
     },
     {
       onSuccess: (response) => {
@@ -98,7 +65,7 @@ export function useAuth(): UseAuthInterface {
   >(
     (signUpInput) => {
       setLoadingSignUp(true);
-      return signUp(signUpInput);
+      return api.post("/api/auth/register", JSON.stringify(signUpInput));
     },
     {
       onSuccess: (response) => {

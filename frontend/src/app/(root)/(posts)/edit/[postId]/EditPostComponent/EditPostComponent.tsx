@@ -55,10 +55,12 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   });
   const router = useRouter();
   const { createPost, editPost, deletePost } = usePosts();
-  const onSubmit = (values: z.infer<typeof formSchema>) =>
-    post
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const result = post
       ? editPost({ post: { ...values, imageContent: image }, id: post.id })
       : createPost({ ...values, imageContent: image });
+    console.debug("result", result);
+  };
 
   const handleImageChange = (event: any) => {
     console.debug("event", event);
