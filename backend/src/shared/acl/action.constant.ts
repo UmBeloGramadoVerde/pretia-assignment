@@ -1,6 +1,3 @@
-/**
- * ACL action list
- */
 export enum Action {
   Create = 'create',
   Read = 'read',

@@ -15,7 +15,6 @@ import { createRequestContext } from '../request-context/util';
 
 @Catch()
 export class AllExceptionsFilter<T> implements ExceptionFilter {
-  /** set logger context */
   constructor(
     private config: ConfigService,
     private readonly logger: AppLogger,
@@ -38,11 +37,9 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
     let errorName: string;
     let message: string;
     let details: string | Record<string, any>;
-    // TODO : Based on language value in header, return a localized message.
     const acceptedLanguage = 'ja';
     let localizedMessage: string;
 
-    // TODO : Refactor the below cases into a switch case and tidy up error response creation.
     if (exception instanceof BaseApiException) {
       statusCode = exception.getStatus();
       errorName = exception.constructor.name;
@@ -60,19 +57,16 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
       stack = exception.stack;
     }
 
-    // Set to internal server error in case it did not match above categories.
     statusCode = statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
     errorName = errorName || 'InternalException';
     message = message || 'Internal server error';
 
-    // NOTE: For reference, please check https://cloud.google.com/apis/design/errors
     const error = {
       statusCode,
       message,
       localizedMessage,
       errorName,
       details,
-      // Additional meta added by us.
       path,
       requestId,
       timestamp,
@@ -82,7 +76,6 @@ export class AllExceptionsFilter<T> implements ExceptionFilter {
       stack,
     });
 
-    // Suppress original internal server error details in prod mode
     const isProMood = this.config.get<string>('env') !== 'development';
     if (isProMood && statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       error.message = 'Internal server error';

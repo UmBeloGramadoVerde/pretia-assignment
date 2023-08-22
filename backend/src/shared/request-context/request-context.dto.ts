@@ -7,6 +7,5 @@ export class RequestContext {
 
   public ip: string;
 
-  // TODO : Discuss with team if this import is acceptable or if we should move UserAccessTokenClaims to shared.
   public user: UserAccessTokenClaims;
 }

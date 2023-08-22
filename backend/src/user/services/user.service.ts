@@ -122,12 +122,10 @@ export class UserService {
     this.logger.log(ctx, `calling ${UserRepository.name}.getById`);
     const user = await this.repository.getById(userId);
 
-    // Hash the password if it exists in the input payload.
     if (input.password) {
       input.password = await hash(input.password, 10);
     }
 
-    // merges the input (2nd line) to the found user (1st line)
     const updatedUser: User = {
       ...user,
       ...plainToClass(User, input),

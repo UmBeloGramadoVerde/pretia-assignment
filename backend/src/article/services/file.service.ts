@@ -11,7 +11,7 @@ export class FileService {
   async saveFileMetadata(file: Express.Multer.File): Promise<File> {
     const newFile = this.repository.create({
       filename: file.originalname,
-      path: file.path, // This could be a local path or a URL if using cloud storage
+      path: file.path,
       size: file.size,
       contentType: file.mimetype,
     });

@@ -33,14 +33,12 @@ export class AuthService {
   ): Promise<UserAccessTokenClaims> {
     this.logger.log(ctx, `${this.validateUser.name} was called`);
 
-    // The userService will throw Unauthorized in case of invalid username/password.
     const user = await this.userService.validateUsernamePassword(
       ctx,
       username,
       pass,
     );
 
-    // Prevent disabled users from logging in.
     if (user.isAccountDisabled) {
       throw new UnauthorizedException('This user account has been disabled');
     }
@@ -60,7 +58,6 @@ export class AuthService {
   ): Promise<RegisterOutput> {
     this.logger.log(ctx, `${this.register.name} was called`);
 
-    // TODO : Setting default role as USER here. Will add option to change this later via ADMIN users.
     input.roles = [ROLE.USER];
     input.isAccountDisabled = false;
 

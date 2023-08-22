@@ -8,7 +8,6 @@ import {
 } from "../../constants";
 import { RequestContext } from "../request-context.dto";
 
-// Creates a RequestContext object from Request
 export function createRequestContext(request: Request): RequestContext {
   const ctx = new RequestContext();
   ctx.requestID = request.header(REQUEST_ID_TOKEN_HEADER);
@@ -17,8 +16,6 @@ export function createRequestContext(request: Request): RequestContext {
     ? request.header(FORWARDED_FOR_TOKEN_HEADER)
     : request.ip;
 
-  console.debug("(request as any).user", (request as any).user);
-  // If request.user does not exist, we explicitly set it to null.
   ctx.user =
     (request as any).user ?? null
       ? plainToClass(UserAccessTokenClaims, (request as any).user ?? null, {

@@ -33,7 +33,6 @@ export class RegisterInput {
   @MaxLength(100)
   email: string;
 
-  // These keys can only be set by ADMIN user.
   roles: ROLE[] = [ROLE.USER];
   isAccountDisabled: boolean;
 }

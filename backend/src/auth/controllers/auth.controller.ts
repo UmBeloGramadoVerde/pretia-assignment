@@ -53,7 +53,6 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   login(
     @ReqContext() ctx: RequestContext,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() credential: LoginInput,
   ): BaseApiResponse<AuthTokenOutput> {
     this.logger.log(ctx, `${this.login.name} was called`);
@@ -95,7 +94,6 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   async refreshToken(
     @ReqContext() ctx: RequestContext,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @Body() credential: RefreshTokenInput,
   ): Promise<BaseApiResponse<AuthTokenOutput>> {
     this.logger.log(ctx, `${this.refreshToken.name} was called`);
