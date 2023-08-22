@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useContext, useState } from "react";
+import React, { Suspense, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -41,7 +41,6 @@ interface EditPostProps {
 }
 
 const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
-  console.debug("post", post);
   const { isDarkMode } = useContext(ThemeContext);
   const [image, setImage] = useState(post?.imageContent?.path ?? null);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,14 +56,15 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   const { createPost, editPost, deletePost } = usePosts();
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const result = post
-      ? editPost({ post: { ...values, imageContent: image }, id: post.id })
-      : createPost({ ...values, imageContent: image });
+      ? editPost.mutate({
+          post: { ...values, imageContent: image },
+          id: post.id,
+        })
+      : createPost.mutate({ ...values, imageContent: image });
     console.debug("result", result);
   };
 
   const handleImageChange = (event: any) => {
-    console.debug("event", event);
-    console.debug("event.target.files[0]", event.target.files[0]);
     try {
       const selectedImage = event.target.files[0];
       setImage(selectedImage);
@@ -77,6 +77,17 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
     form.setValue("imageContent", "");
     setImage(null);
   };
+
+  useEffect(() => {
+    if (editPost.isSuccess && post?.id) router.push("/view/" + post.id);
+  }, [editPost.isSuccess]);
+  useEffect(() => {
+    if (deletePost.isSuccess) router.push("/");
+  }, [deletePost.isSuccess]);
+  useEffect(() => {
+    if (createPost.isSuccess && createPost.data.id)
+      router.push("/view/" + createPost.data.id);
+  }, [createPost.isSuccess]);
 
   return (
     <Card className="max-w-[90%] w-full">
@@ -91,7 +102,7 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
         </div>
         {post?.id && (
           <div className="absolute top-0 right-0 !mt-0">
-            <RemoveButton removeFn={() => deletePost(post.id)} />
+            <RemoveButton removeFn={() => deletePost.mutate(post.id)} />
           </div>
         )}
       </CardHeader>

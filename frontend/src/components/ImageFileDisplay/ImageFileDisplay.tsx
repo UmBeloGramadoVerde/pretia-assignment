@@ -11,10 +11,7 @@ const ImageFileDisplay: React.FC<ImageFileDisplayProps> = ({
   image,
   removeImageFn,
 }) => {
-  console.log(image);
-  console.log(typeof image);
   const imageUrl = typeof image === "string" ? getImageLink(image) : URL.createObjectURL(image);
-  console.debug("imageUrl", imageUrl);
   return (
     <div>
       <div className="relative flex w-fit">

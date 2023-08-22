@@ -4,14 +4,14 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - backend
   backend:
     build:
       context: ./backend
     ports:
-      - "3001:3001"
+      - "3000:3000"
     depends_on:
       - pgsqldb
     environment:
@@ -19,18 +19,6 @@ services:
       - DB_NAME=cms_db_postgres
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
-  mongo:
-    image: mongo:latest
-    restart: always
-    environment:
-      - MONGODB_DATABASE=cms_db
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=password
-    ports:
-      - "27017:27017"
-    volumes:
-      - db:/data/db
-      - configdb:/data/configdb
   pgsqldb:
     image: postgres:latest
     environment:
@@ -42,7 +30,27 @@ services:
     volumes:
       - pgsqldata:/data/postgresql/data
 
+  chrome:
+    platform: linux/amd64
+    image: selenium/node-chrome:beta
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+  selenium-hub:
+    platform: linux/amd64
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+
 volumes:
-  db:
-  configdb:
   pgsqldata:

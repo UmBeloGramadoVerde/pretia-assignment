@@ -14,58 +14,27 @@ import axios from "axios";
 export const ME_QUERY_KEY = "me";
 
 interface IUseUser {
-  fetchMe: DefinedUseQueryResult<User | null | undefined>;
-  logout: () => void;
+  meQuery: DefinedUseQueryResult<User | null | undefined>;
+  me: User | null | undefined;
 }
 
 export function useMe(): IUseUser {
-  const queryClient = useQueryClient();
   const api = useApi();
-  const [user, setUser] = useState<User | null | undefined>(null);
-  const {
-    saveUserStorage,
-    removeUserStorage,
-    getUserStorage,
-    getAuthStorage,
-    removeAuthStorage,
-  } = useStorage();
 
-  const fetchMe = useQuery(
+  const meQuery = useQuery(
     [ME_QUERY_KEY],
-    async (): Promise<User | null> => {
-      console.log(api.interceptors);
-      const resp = (await api.get("/api/users/me"))?.data;
-      console.log(resp);
-      return resp.data;
-    },
+    async (): Promise<User | null> =>
+      api.get("/api/users/me").then((response) => response.data),
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      initialData: getUserStorage,
-      onSuccess: (result) => {
-        console.log(result);
-        setUser(result);
-      },
-      onError: () => {
-        removeUserStorage();
-      },
+      initialData: null,
     }
   );
 
-  const logout = () => {
-    queryClient.setQueryData([ME_QUERY_KEY], null);
-    removeUserStorage();
-    removeAuthStorage;
-  };
-
-  useEffect(() => {
-    if (!user) removeUserStorage();
-    else saveUserStorage(user);
-  }, [user]);
-
   return {
-    fetchMe,
-    logout,
+    meQuery,
+    me: meQuery.data,
   };
 }

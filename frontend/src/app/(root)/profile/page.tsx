@@ -3,12 +3,14 @@
 import Loader from "@/components/Loader/Loader";
 import LogoutButton from "@/components/LogoutButton/LogoutButton";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 import { useMe } from "@/hooks/useMe";
 import { formatDate } from "@/utils";
 
 export default function ProfilePage() {
-  const { fetchMe, logout } = useMe();
-  const me = fetchMe.data;
+  const { me } = useMe();
+  const { logout } = useAuth();
+  console.debug('me', me)
   return (
     <>
       {me ? (

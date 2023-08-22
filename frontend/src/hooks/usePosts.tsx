@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  UseMutationResult,
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 import { AuthToken } from "@/types/authToken";
@@ -25,25 +26,18 @@ type UsePostsInterface = {
 
 type FetchPostsInterface = DefinedUseQueryResult<Post[]>;
 
-type FetchPostInterface = (
-  id: string
-) => DefinedUseQueryResult<Post>;
+type FetchPostInterface = (id: string) => DefinedUseQueryResult<Post>;
 
-type CreatePostInterface = UseMutateFunction<
+type CreatePostInterface = UseMutationResult<
   Post,
   unknown,
   CreatePostInput,
   unknown
 >;
 
-type DeletePostInterface = UseMutateFunction<unknown, unknown, number, unknown>;
+type DeletePostInterface = UseMutationResult<unknown, unknown, number, unknown>;
 
-type EditPostInterface = UseMutateFunction<
-  Post,
-  unknown,
-  EditPostInput,
-  unknown
->;
+type EditPostInterface = UseMutationResult<Post, unknown, EditPostInput, unknown>;
 
 export function usePosts(): UsePostsInterface {
   const queryClient = useQueryClient();
@@ -52,9 +46,9 @@ export function usePosts(): UsePostsInterface {
   const fetchPosts = useQuery(
     [POSTS_QUERY_KEY],
     async (): Promise<Post[]> =>
-      api.get("/api/articles").then((response) => response.data.data),
+      api.get("/api/articles").then((response) => response.data),
     {
-      initialData: () => ([]),
+      initialData: () => [],
     }
   );
 
@@ -62,18 +56,13 @@ export function usePosts(): UsePostsInterface {
     useQuery(
       [POST_QUERY_KEY, id],
       async (): Promise<Post> =>
-        api.get("/api/articles/" + id).then((response) => response.data.data),
+        api.get("/api/articles/" + id).then((response) => response.data),
       {
         initialData: () => ({} as Post),
       }
     );
 
-  const { mutate: editPostMutation } = useMutation<
-    Post,
-    unknown,
-    EditPostInput,
-    unknown
-  >(
+  const editPostMutation = useMutation<Post, unknown, EditPostInput, unknown>(
     (input: EditPostInput) => {
       const formData = new FormData();
       formData.append("title", input.post.title);
@@ -88,9 +77,9 @@ export function usePosts(): UsePostsInterface {
     },
     {
       onSuccess: (data) => {
-        console.debug("data", data);
         queryClient.setQueryData([POST_QUERY_KEY, data.id], data);
         queryClient.invalidateQueries({ queryKey: [POSTS_QUERY_KEY] });
+        return data;
       },
       onError: (error) => {
         throw new Error("Failed on sign in request" + error);
@@ -98,7 +87,7 @@ export function usePosts(): UsePostsInterface {
     }
   );
 
-  const { mutate: deletePostMutation } = useMutation<
+  const deletePostMutation = useMutation<
     boolean,
     unknown,
     number,
@@ -117,7 +106,7 @@ export function usePosts(): UsePostsInterface {
     }
   );
 
-  const { mutate: createPostMutation } = useMutation<
+  const createPostMutation = useMutation<
     Post,
     unknown,
     CreatePostInput,

@@ -20,13 +20,15 @@ type UseAuthInterface = {
   signUpMutation: UseMutateFunction<User, Error, SignUpInput, unknown>;
   loadingSignUp: boolean;
   resultSignUp: User | null;
+  logout: () => void;
 };
 
 export function useAuth(): UseAuthInterface {
   const api = useApi();
+  const {meQuery} = useMe()
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { saveAuthStorage } = useStorage();
+  const { saveAuthStorage, removeAuthStorage } = useStorage();
   const [loadingSignIn, setLoadingSignIn] = useState(false);
   const [resultSignIn, setResultSignIn] = useState<AuthToken | null>(null);
   const [loadingSignUp, setLoadingSignUp] = useState(false);
@@ -40,7 +42,13 @@ export function useAuth(): UseAuthInterface {
   >(
     (signInInput) => {
       setLoadingSignIn(true);
-      return api.post("/api/auth/login", JSON.stringify(signInInput));
+      return api
+        .post("/api/auth/login", JSON.stringify(signInInput), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => response.data);
     },
     {
       onSuccess: (response) => {
@@ -49,6 +57,7 @@ export function useAuth(): UseAuthInterface {
         queryClient.invalidateQueries({ queryKey: [ME_QUERY_KEY] });
         setLoadingSignIn(false);
         setResultSignIn(response);
+        meQuery.refetch()
       },
       onError: (error) => {
         setLoadingSignIn(false);
@@ -65,11 +74,13 @@ export function useAuth(): UseAuthInterface {
   >(
     (signUpInput) => {
       setLoadingSignUp(true);
-      return api.post("/api/auth/register", JSON.stringify(signUpInput));
+      return api
+        .post("/api/auth/register", JSON.stringify(signUpInput))
+        .then((response) => response.data);
     },
     {
       onSuccess: (response) => {
-        queryClient.setQueryData([AUTH_QUERY_KEY], response);
+        queryClient.setQueryData([ME_QUERY_KEY], response);
         setLoadingSignUp(false);
         setResultSignUp(response);
       },
@@ -83,6 +94,12 @@ export function useAuth(): UseAuthInterface {
     }
   );
 
+  const logout = () => {
+    queryClient.setQueryData([AUTH_QUERY_KEY], null);
+    queryClient.setQueryData([ME_QUERY_KEY], null);
+    removeAuthStorage;
+  };
+
   return {
     signInMutation,
     loadingSignIn,
@@ -90,5 +107,6 @@ export function useAuth(): UseAuthInterface {
     signUpMutation,
     loadingSignUp,
     resultSignUp,
+    logout
   };
 }

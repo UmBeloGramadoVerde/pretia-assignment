@@ -20,8 +20,7 @@ import {
 import { useMe } from "@/hooks/useMe";
 
 const Header = () => {
-  const { fetchMe } = useMe();
-  const me = fetchMe.data;
+  const { me } = useMe();
   console.debug('me', me)
   return (
     <div className="p-5 flex justify-between items-center border-b border-border">

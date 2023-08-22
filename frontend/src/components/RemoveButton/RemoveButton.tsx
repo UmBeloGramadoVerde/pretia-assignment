@@ -18,7 +18,6 @@ interface RemoveButtonProps {
 const RemoveButton: React.FC<RemoveButtonProps> = ({ removeFn }) => {
   const [isOpen, setIsOpen] = useState(false);
   const onOpenChange = (open: any) => {
-    console.debug("open", open);
     setIsOpen(open);
   };
   const deleteHandler = () => {
