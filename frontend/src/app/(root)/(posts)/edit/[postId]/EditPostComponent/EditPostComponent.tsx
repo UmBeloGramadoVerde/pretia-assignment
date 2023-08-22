@@ -23,13 +23,11 @@ import {
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreatePost } from "@/hooks/useCreatePost";
 import { Post } from "@/types/post";
-import { useEditPost } from "@/hooks/useEditPost";
-import { useDeletePost } from "@/hooks/useDeletePost";
 import RemoveButton from "../../../../../../components/RemoveButton/RemoveButton";
 import { ThemeContext } from "@/contexts/ThemeContextProvider";
 import ImageFileDisplay from "@/components/ImageFileDisplay/ImageFileDisplay";
+import { usePosts } from "@/hooks/usePosts";
 
 const formSchema = z.object({
   title: z.string(),
@@ -56,9 +54,7 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
     },
   });
   const router = useRouter();
-  const createPost = useCreatePost();
-  const editPost = useEditPost();
-  const deletePost = useDeletePost();
+  const { createPost, editPost, deletePost } = usePosts();
   const onSubmit = (values: z.infer<typeof formSchema>) =>
     post
       ? editPost({ post: { ...values, imageContent: image }, id: post.id })

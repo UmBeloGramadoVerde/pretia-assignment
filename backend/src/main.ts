@@ -10,7 +10,7 @@ import { RequestIdMiddleware } from "./shared/middlewares/request-id/request-id.
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.setGlobalPrefix("api");
 
@@ -24,6 +24,9 @@ async function bootstrap() {
     .setVersion("1.0")
     .addBearerAuth()
     .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup("swagger", app, document);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>("port");

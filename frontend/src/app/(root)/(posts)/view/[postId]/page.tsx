@@ -2,14 +2,15 @@
 
 import Loader from "@/components/Loader/Loader";
 import PostDisplay from "@/components/PostDisplay/PostDisplay";
-import { usePost } from "@/hooks/usePost";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function EditPostPage({
   params,
 }: {
   params: { postId: string };
 }) {
-  const { post } = usePost(params.postId);
+  const { fetchPost } = usePosts();
+  const post = fetchPost(params.postId)?.data;
   return (
     <div className="flex justify-center">
       {post.id ? (

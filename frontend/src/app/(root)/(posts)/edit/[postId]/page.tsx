@@ -1,15 +1,16 @@
 "use client";
 
 import Loader from "@/components/Loader/Loader";
-import { usePost } from "@/hooks/usePost";
 import EditPostComponent from "./EditPostComponent/EditPostComponent";
+import { usePosts } from "@/hooks/usePosts";
 
 export default function EditPostPage({
   params,
 }: {
   params: { postId: string };
 }) {
-  const { post } = usePost(params.postId);
+  const { fetchPost } = usePosts();
+  const post = fetchPost(params.postId)?.data;
   return (
     <div className="flex justify-center">
       {post.id ? (

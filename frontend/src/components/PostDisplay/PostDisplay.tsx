@@ -19,7 +19,8 @@ interface PostDisplayProps {
 
 const PostDisplay: React.FC<PostDisplayProps> = ({ post }) => {
   const router = useRouter();
-  const {me} = useMe();
+  const {fetchMe} = useMe();
+  const me = fetchMe.data;
   return (
     <Card
       className="cursor-pointer w-full"

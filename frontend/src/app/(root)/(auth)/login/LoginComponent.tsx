@@ -23,8 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from "next/navigation";
-import { useSignIn } from "@/hooks/useSignIn";
 import Loader from "@/components/Loader/Loader";
+import { useAuth } from "@/hooks/useAuth";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -40,7 +40,7 @@ export default function LoginComponent() {
     },
   });
   const router = useRouter();
-  const { signInMutation: signIn, loading, result } = useSignIn();
+  const { signInMutation: signIn, loadingSignIn: loading, resultSignIn: result } = useAuth();
   const onSubmit = (values: z.infer<typeof formSchema>) => signIn(values);
   useEffect(() => {
     result?.accessToken ? router.push("/") : null;

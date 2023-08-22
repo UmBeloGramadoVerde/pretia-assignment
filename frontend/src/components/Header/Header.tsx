@@ -20,7 +20,9 @@ import {
 import { useMe } from "@/hooks/useMe";
 
 const Header = () => {
-  const { me } = useMe();
+  const { fetchMe } = useMe();
+  const me = fetchMe.data;
+  console.debug('me', me)
   return (
     <div className="p-5 flex justify-between items-center border-b border-border">
       <h1 className="text-2xl">Pretia Assesment</h1>

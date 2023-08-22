@@ -1,37 +1,27 @@
 import { User } from "@/types/user";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  DefinedUseQueryResult,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AuthToken } from "@/types/authToken";
 import { useApi } from "./useApi";
+import { BaseApiResponse } from "@/types/api";
+import axios from "axios";
 
 export const ME_QUERY_KEY = "me";
 
 interface IUseUser {
-  me: User | null;
+  fetchMe: DefinedUseQueryResult<User | null | undefined>;
   logout: () => void;
-}
-
-async function getMe(
-  tokens: AuthToken | null | undefined
-): Promise<User | null> {
-  if (!tokens) return null;
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users/me`,
-    {
-      headers: {
-        Authorization: `Bearer ${tokens.accessToken}`,
-      },
-    }
-  );
-  if (!response.ok)
-    throw new Error("Failed on get user request" + JSON.stringify(response));
-
-  return await response.json().then((r) => r.data);
 }
 
 export function useMe(): IUseUser {
   const queryClient = useQueryClient();
+  const api = useApi();
+  const [user, setUser] = useState<User | null | undefined>(null);
   const {
     saveUserStorage,
     removeUserStorage,
@@ -40,14 +30,23 @@ export function useMe(): IUseUser {
     removeAuthStorage,
   } = useStorage();
 
-  const { data: user } = useQuery(
+  const fetchMe = useQuery(
     [ME_QUERY_KEY],
-    async (): Promise<User | null> => getMe(getAuthStorage()),
+    async (): Promise<User | null> => {
+      console.log(api.interceptors);
+      const resp = (await api.get("/api/users/me"))?.data;
+      console.log(resp);
+      return resp.data;
+    },
     {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       initialData: getUserStorage,
+      onSuccess: (result) => {
+        console.log(result);
+        setUser(result);
+      },
       onError: () => {
         removeUserStorage();
       },
@@ -66,7 +65,7 @@ export function useMe(): IUseUser {
   }, [user]);
 
   return {
-    me: user ?? null,
+    fetchMe,
     logout,
   };
 }
