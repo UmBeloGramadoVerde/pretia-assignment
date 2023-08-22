@@ -22,10 +22,3 @@ export function applyPrecision(floatNumber: number): number | string {
 export function getImageLink(apiImageFilename: string): string {
   return `${process.env.NEXT_PUBLIC_BASE_API_URL}/${apiImageFilename}`;
 }
-
-export const storage = {
-  getToken: () => JSON.parse(window?.localStorage.getItem('token') || 'null'),
-  setToken: (token: any) =>
-    window?.localStorage.setItem('token', JSON.stringify(token)),
-  clearToken: () => window?.localStorage.removeItem('token'),
-};

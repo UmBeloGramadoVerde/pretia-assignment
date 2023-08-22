@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { LogOutIcon } from "lucide-react";
-import { useMe } from "@/hooks/useMe";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const LogoutButton = () => {
-  const { logout } = useMe();
+  const { logout } = useAuth();
   const router = useRouter();
   const logoutClickHandler = (ev: any) => {
     ev.preventDefault();

@@ -27,7 +27,7 @@ const PostDisplay: React.FC<PostDisplayProps> = ({ post }) => {
     >
       <CardHeader className="relative m-6 p-0">
         <div>
-          <CardTitle className="mb-3">{post.title}</CardTitle>
+          <CardTitle className="mb-3" id="titleDisplay">{post.title}</CardTitle>
           <CardDescription>By {post.author?.name}</CardDescription>
         </div>
         {post?.id && me?.id === post.author?.id && (
@@ -37,9 +37,9 @@ const PostDisplay: React.FC<PostDisplayProps> = ({ post }) => {
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
-        <div className="break-words">{post.textContent}</div>
+        <div className="break-words max-h-[100px] overflow-hidden" id="textDisplay">{post.textContent}</div>
         {post.jsonContent && (
-          <div className="break-words">{post.jsonContent}</div>
+          <div className="break-words max-h-[100px] overflow-hidden font-light"  id="jsonDisplay">{post.jsonContent}</div>
         )}
         {post.imageContent?.path && (
           <div className="">
@@ -48,6 +48,7 @@ const PostDisplay: React.FC<PostDisplayProps> = ({ post }) => {
               alt="post image"
               width={200}
               height={200}
+              id="imageDisplay"
             />
           </div>
         )}

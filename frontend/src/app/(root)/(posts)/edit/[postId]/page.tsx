@@ -1,7 +1,7 @@
 "use client";
 
 import Loader from "@/components/Loader/Loader";
-import EditPostComponent from "./EditPostComponent/EditPostComponent";
+import EditPostComponent from "@/components/EditPostComponent/EditPostComponent";
 import { usePosts } from "@/hooks/usePosts";
 
 export default function EditPostPage({

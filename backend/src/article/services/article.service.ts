@@ -36,18 +36,13 @@ export class ArticleService {
     input: CreateArticleInput,
     image?: Express.Multer.File
   ): Promise<ArticleOutput> {
-    console.debug("input", input);
-    console.debug("image", image);
     this.logger.log(ctx, `${this.createArticle.name} was called`);
 
     const article = plainToClass(Article, input);
-    console.debug("article", article);
 
     const actor: Actor = ctx.user;
-    console.debug("actor", actor);
 
     const user = await this.userService.findById(ctx, actor.id);
-    console.debug("user", user);
 
     const isAllowed = this.aclService
       .forActor(actor)
@@ -60,11 +55,9 @@ export class ArticleService {
     if (image) {
       const savedFile = await this.fileService.saveFileMetadata(image);
       article.imageContent = plainToClass(File, savedFile);
-      console.debug("savedFile", savedFile);
     }
 
     this.logger.log(ctx, `calling ${ArticleRepository.name}.save`);
-    console.debug("article", article);
     const savedArticle = await this.repository.save(article);
 
     return plainToClass(ArticleOutput, savedArticle, {
@@ -86,11 +79,9 @@ export class ArticleService {
       skip: offset,
     });
 
-    console.debug("articles", articles);
     const articlesOutput = plainToClass(ArticleOutput, articles, {
       excludeExtraneousValues: true,
     });
-    console.debug("articles", articlesOutput);
 
     return { articles: articlesOutput, count };
   }
@@ -115,7 +106,6 @@ export class ArticleService {
     input: UpdateArticleInput,
     image?: Express.Multer.File
   ): Promise<ArticleOutput> {
-    console.debug("image", image);
     this.logger.log(ctx, `${this.updateArticle.name} was called`);
 
     this.logger.log(ctx, `calling ${ArticleRepository.name}.getById`);
@@ -135,7 +125,6 @@ export class ArticleService {
     if (image) {
       const savedFile = await this.fileService.saveFileMetadata(image);
       article.imageContent = plainToClass(File, savedFile);
-      console.debug("savedFile", savedFile);
     }
 
     const updatedArticle: Article = {

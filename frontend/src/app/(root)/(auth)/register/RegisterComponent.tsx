@@ -65,7 +65,7 @@ export default function RegisterComponent() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field}  id="nameInput"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,7 +78,7 @@ export default function RegisterComponent() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} id="usernameInput"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,7 +91,7 @@ export default function RegisterComponent() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" />
+                    <Input {...field} type="password" id="passwordInput"/>
                   </FormControl>
                   <FormDescription>At least 8 characters.</FormDescription>
                   <FormMessage />
@@ -105,13 +105,13 @@ export default function RegisterComponent() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} id="emailInput"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" id="registerButton">
               Register
             </Button>
             <div className="flex gap-5 items-center justify-around">
@@ -123,6 +123,7 @@ export default function RegisterComponent() {
                   ev.stopPropagation();
                   ev.preventDefault();
                 }}
+                id="loginButton"
               >
                 Login
               </Button>

@@ -25,7 +25,6 @@ type UseAuthInterface = {
 
 export function useAuth(): UseAuthInterface {
   const api = useApi();
-  const {meQuery} = useMe()
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { saveAuthStorage, removeAuthStorage } = useStorage();
@@ -57,7 +56,8 @@ export function useAuth(): UseAuthInterface {
         queryClient.invalidateQueries({ queryKey: [ME_QUERY_KEY] });
         setLoadingSignIn(false);
         setResultSignIn(response);
-        meQuery.refetch()
+        queryClient.invalidateQueries([ME_QUERY_KEY])
+        queryClient.refetchQueries([ME_QUERY_KEY])
       },
       onError: (error) => {
         setLoadingSignIn(false);
@@ -75,7 +75,11 @@ export function useAuth(): UseAuthInterface {
     (signUpInput) => {
       setLoadingSignUp(true);
       return api
-        .post("/api/auth/register", JSON.stringify(signUpInput))
+        .post("/api/auth/register", JSON.stringify(signUpInput), {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => response.data);
     },
     {
@@ -107,6 +111,6 @@ export function useAuth(): UseAuthInterface {
     signUpMutation,
     loadingSignUp,
     resultSignUp,
-    logout
+    logout,
   };
 }

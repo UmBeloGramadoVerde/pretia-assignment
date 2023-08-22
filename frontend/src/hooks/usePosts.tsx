@@ -73,7 +73,7 @@ export function usePosts(): UsePostsInterface {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+      }).then((response) => response.data);
     },
     {
       onSuccess: (data) => {
@@ -122,7 +122,7 @@ export function usePosts(): UsePostsInterface {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+      }).then((response) => response.data);
     },
     {
       onSuccess: (data) => {

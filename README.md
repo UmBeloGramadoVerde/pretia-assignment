@@ -63,3 +63,20 @@ Navigate to the backend directory and run docker-compose up to start MongoDB and
 Navigate to the frontend directory and run npm install to install frontend dependencies.
 Run npm run dev to start the Next.js frontend application.
 Feel free to extend and customize the project structure to suit your specific requirements.
+
+
+## Observations about the Frontend
+
+In this app, we are using Next.js for its simplified routing scheme, out-of-the-box SSR capability, and ease of deployment on Vercel.
+
+We used Next.js App router instead of Pages router for more flexibility, performance optimization, and future-proofing.
+
+React Query is used to handle data fetching, querying, and caching. It makes it easier to handle infinite scrolling, refetching, and retries in the future.
+
+React Query uses re-fetch on page focus. Since the mock backend randomly assigns EUR conversion values, it may appear that the prices jump all over the place. However, this is because the variation is too big. In an actual app, this implemented behavior would be ideal, as updating the values of the transactions in a desired behavior.
+
+We used React.lazy and Suspense to lazy load the bigger components, reducing the initial JS bundle that needs to be loaded and improving the first page load time.
+
+Shared components, hooks, and types are placed under src/, while the app/ folder is reserved for routing, and subfolders are able to hold feature-specific components, hooks, and types.
+
+We used https://ui.shadcn.com/ for the component library. It is easy to use, supports TypeScript, completely customizable, and compatible with Tailwind CSS. Components are added using: npx shadcn-ui@latest add [component].

@@ -157,7 +157,6 @@ export class ArticleController {
     @Body() input: UpdateArticleInput,
     @UploadedFile() image: Express.Multer.File
   ): Promise<BaseApiResponse<ArticleOutput>> {
-    console.debug("image", image);
     const article = await this.articleService.updateArticle(
       ctx,
       articleId,

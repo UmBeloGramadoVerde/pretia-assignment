@@ -61,7 +61,7 @@ export default function LoginComponent() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} id="usernameInput"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -74,14 +74,14 @@ export default function LoginComponent() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" />
+                    <Input {...field} type="password" id="passwordInput"/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" id="loginButton">
               Login
             </Button>
             <div className="flex gap-5 items-center justify-around">
@@ -93,6 +93,7 @@ export default function LoginComponent() {
                   ev.stopPropagation();
                   ev.preventDefault();
                 }}
+                id="registerButton"
               >
                 Register
               </Button>

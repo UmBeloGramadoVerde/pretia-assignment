@@ -1,6 +1,7 @@
 import { User } from "@/types/user";
 import {
   DefinedUseQueryResult,
+  UseQueryResult,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -14,7 +15,7 @@ import axios from "axios";
 export const ME_QUERY_KEY = "me";
 
 interface IUseUser {
-  meQuery: DefinedUseQueryResult<User | null | undefined>;
+  meQuery: UseQueryResult<User | null | undefined>;
   me: User | null | undefined;
 }
 
@@ -29,7 +30,6 @@ export function useMe(): IUseUser {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      initialData: null,
     }
   );
 

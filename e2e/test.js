@@ -1,24 +1,101 @@
 const { Builder, By, Key, until } = require("selenium-webdriver");
-const chrome = require('selenium-webdriver/chrome');
 
+const timestamp = new Date().getTime();
+const mockUser = "selenium_username" + timestamp;
+const mockPass = "selenium_password" + timestamp;
+const mockEmail = `selenium_email${timestamp}@email.com`;
+const mockName = "selenium_name" + timestamp;
 
-async function example() {
-  let options = new chrome.Options();
-  options.addArguments("--no-sandbox");
+let createdPostId = null;
 
-  let driver = new Builder()
-    .forBrowser("chrome")
-    .usingServer('http://localhost:4444/wd/hub')
-    .setChromeOptions(options)
-    .build();
-
-  
+async function testFlows() {
+  const driver = await new Builder().forBrowser("chrome").build();
   try {
-    await driver.get("http://localhost:3001");
-    await driver.findElement(By.name("q")).sendKeys("webdriver", Key.RETURN);
-    await driver.wait(until.titleIs("webdriver - Google Search"), 1000);
+    await registerTest(driver);
+    await loginTest(driver);
+    await postTest(driver);
+  } catch (error) {
+    console.error(error);
   } finally {
-    await driver.quit();
+    // Close the browser
+    driver.quit();
   }
 }
-example();
+
+async function registerTest(driver) {
+  try {
+    await driver.get("http://127.0.0.1:3001/register");
+
+    const usernameInput = await driver.findElement(By.id("usernameInput"));
+    const passwordInput = await driver.findElement(By.id("passwordInput"));
+    const emailInput = await driver.findElement(By.id("emailInput"));
+    const nameInput = await driver.findElement(By.id("nameInput"));
+    const registerButton = await driver.findElement(By.id("registerButton"));
+
+    await usernameInput.sendKeys(mockUser);
+    await passwordInput.sendKeys(mockPass);
+    await emailInput.sendKeys(mockEmail);
+    await nameInput.sendKeys(mockName);
+
+    await registerButton.click();
+
+    await driver.wait(until.urlContains("/login"), 10000);
+
+    const url = await driver.getCurrentUrl();
+    console.log("Register successful. Page URL:", url);
+  } catch (error) {
+    throw ("Register failed:", error);
+  }
+}
+async function loginTest(driver) {
+  try {
+    await driver.get("http://127.0.0.1:3001/login");
+
+    const usernameInput = await driver.findElement(By.id("usernameInput"));
+    const passwordInput = await driver.findElement(By.id("passwordInput"));
+    const loginButton = await driver.findElement(By.id("loginButton"));
+
+    await usernameInput.sendKeys(mockUser);
+    await passwordInput.sendKeys(mockPass);
+
+    await loginButton.click();
+
+    await driver.wait(until.urlContains("/all-posts"), 10000);
+
+    const url = await driver.getCurrentUrl();
+    console.log("Login successful. Page URL:", url);
+  } catch (error) {
+    throw ("Login failed:", error);
+  }
+}
+
+async function postTest(driver) {
+  try {
+    await driver.get("http://127.0.0.1:3001/write");
+
+    const titleInput = await driver.findElement(By.id("titleInput"));
+    const textInput = await driver.findElement(By.id("textInput"));
+    const jsonInput = await driver.findElement(By.id("jsonInput"));
+
+    const submitButton = await driver.findElement(By.id("submitButton"));
+
+    await driver.wait(until.elementIsVisible(submitButton), 10000);
+
+    await titleInput.sendKeys("titleInput");
+    await textInput.sendKeys("textInput");
+    await jsonInput.sendKeys("jsonInput");
+
+    await submitButton.click();
+
+    await driver.wait(until.urlContains("/view/"), 10000);
+
+    const url = await driver.getCurrentUrl();
+    createdPostId = url.split("/view/")[1];
+    console.debug('createdPostId', createdPostId)
+    console.log("Posting successful. Page URL:", url);
+  } catch (error) {
+    throw ("Posting failed:", error);
+  }
+}
+
+testFlows();
