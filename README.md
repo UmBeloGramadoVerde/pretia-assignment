@@ -61,6 +61,12 @@ The project is structured as follows:
 └── ...
 ```
 
+## Database structure
+
+![Database structure](https://imgur.com/a/XPU1QzB)
+
+Currently each post only has one image, therefore the One to One relationship, another TODO is allow multiple image posting
+
 ## Observations about the Frontend Stack
 
 Next.js is a powerful React framework that excels in server-side rendering (SSR) and static site generation (SSG). It provides an opinionated structure for building React applications with built-in routing, server-side rendering capabilities, and automatic code splitting. Next.js enhances performance by rendering pages on the server, resulting in faster initial load times and improved SEO. It also supports client-side routing for dynamic interactions. Its rich ecosystem of plugins and tools simplifies tasks like internationalization and optimization. Next.js's versatility makes it an excellent choice for building modern web applications with enhanced user experiences.
