@@ -21,9 +21,10 @@ import { useMe } from "@/hooks/useMe";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ServerCogIcon } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
-  const { meQuery } = useMe();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
   return (
     <div className="p-5 flex justify-between items-center border-b border-border">
@@ -44,7 +45,7 @@ const Header = () => {
                 New Post
               </Link>
             </NavigationMenuItem>
-            {meQuery.data ? (
+            {isLoggedIn ? (
               <NavigationMenuItem>
                 <Link href="/profile" className={navigationMenuTriggerStyle()}>
                   My Profile
@@ -75,7 +76,7 @@ const Header = () => {
               <Link href="/write">
                 <DropdownMenuItem>New Post</DropdownMenuItem>
               </Link>
-              {meQuery.data ? (
+              {isLoggedIn ? (
                 <Link href="/profile">
                   <DropdownMenuItem>My Profile</DropdownMenuItem>
                 </Link>

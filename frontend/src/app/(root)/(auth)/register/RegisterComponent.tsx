@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader/Loader";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -44,11 +45,23 @@ export default function RegisterComponent() {
     },
   });
   const router = useRouter();
-  const { signUpMutation: signUp, loadingSignUp: loading, resultSignUp: result } = useAuth();
-  const onSubmit = (values: z.infer<typeof formSchema>) => signUp(values);
+  const { signUp } = useAuth();
+  const onSubmit = (values: z.infer<typeof formSchema>) => signUp.mutate(values);
   useEffect(() => {
-    result?.id ? router.push("/login") : null;
-  }, [result]);
+    if (signUp.isSuccess) {
+      toast({
+        variant: "success",
+        description: "Signup successful!",
+      });
+      router.push("/login");
+    }
+    if (signUp.isError) {
+      toast({
+        variant: "error",
+        description: "Signup failed",
+      });
+    }
+  }, [signUp.isSuccess, signUp.isError]);
   return (
     <Card className="max-w-[350px] w-full relative">
       <CardHeader>
@@ -131,7 +144,7 @@ export default function RegisterComponent() {
           </form>
         </Form>
       </CardContent>
-      {loading && (
+      {signUp.isLoading && (
         <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
           <Loader className="opacity-100 bg-background" />
         </div>

@@ -29,6 +29,7 @@ import { ThemeContext } from "@/contexts/ThemeContextProvider";
 import ImageFileDisplay from "@/components/ImageFileDisplay/ImageFileDisplay";
 import { usePosts } from "@/hooks/usePosts";
 import Loader from "@/components/Loader/Loader";
+import { toast } from "../ui/use-toast";
 
 const formSchema = z.object({
   title: z.string(),
@@ -80,17 +81,52 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
   };
 
   useEffect(() => {
-    if (editPost.isSuccess && post?.id) router.push("/view/" + post.id);
-  }, [editPost.isSuccess]);
+    if (editPost.isSuccess && post?.id) {
+      toast({
+        variant: "success",
+        description: "Post editting successful!",
+      });
+      router.push("/view/" + post.id);
+    }
+    if (editPost.isError) {
+      toast({
+        variant: "error",
+        description: "Post editting failed",
+      });
+    }
+  }, [editPost.isSuccess, editPost.isError]);
   useEffect(() => {
-    if (deletePost.isSuccess) router.push("/");
-  }, [deletePost.isSuccess]);
+    if (deletePost.isSuccess) {
+      toast({
+        variant: "success",
+        description: "Post deletion successful!",
+      });
+      router.push("/");
+    }
+    if (deletePost.isError) {
+      toast({
+        variant: "error",
+        description: "Post deletion failed",
+      });
+    }
+  }, [deletePost.isSuccess, deletePost.isError]);
   useEffect(() => {
-    console.debug('createPost.isSuccess', createPost.isSuccess)
-    console.debug('createPost.data', createPost.data)
-    if (createPost.isSuccess && createPost.data.id)
+    console.debug("createPost.isSuccess", createPost.isSuccess);
+    console.debug("createPost.data", createPost.data);
+    if (createPost.isSuccess && createPost.data.id) {
+      toast({
+        variant: "success",
+        description: "Post creation successful!",
+      });
       router.push("/view/" + createPost.data.id);
-  }, [createPost.data]);
+    }
+    if (createPost.isError) {
+      toast({
+        variant: "error",
+        description: "Post creation failed",
+      });
+    }
+  }, [createPost.data, createPost.isError]);
 
   return (
     <Card className="max-w-[90%] w-full">
@@ -188,6 +224,7 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
                         {...field}
                         accept="image/png, image/jpeg, image/jpg"
                         onChange={handleImageChange}
+                        className="cursor-pointer h-fit file:cursor-pointer file:text-background file:bg-foreground file:rounded-md file:p-1"
                       />
                     )}
                   </FormControl>
@@ -215,11 +252,13 @@ const EditPostComponent: React.FC<EditPostProps> = ({ post }) => {
           </form>
         </Form>
       </CardContent>
-      {editPost.isLoading || createPost.isLoading || deletePost.isLoading && (
-        <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
-          <Loader className="opacity-100 bg-background" />
-        </div>
-      )}
+      {editPost.isLoading ||
+        createPost.isLoading ||
+        (deletePost.isLoading && (
+          <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
+            <Loader className="opacity-100 bg-background" />
+          </div>
+        ))}
     </Card>
   );
 };

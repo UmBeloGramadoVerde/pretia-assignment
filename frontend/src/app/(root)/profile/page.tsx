@@ -1,15 +1,13 @@
 "use client";
 
 import Loader from "@/components/Loader/Loader";
-import LogoutButton from "@/components/LogoutButton/LogoutButton";
+import LogoutButton from "./LogoutButton";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/hooks/useAuth";
 import { useMe } from "@/hooks/useMe";
 import { formatDate } from "@/utils";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,7 +15,6 @@ import {
 
 export default function ProfilePage() {
   const { me } = useMe();
-  console.debug("me", me);
   return (
     <>
       {me ? (
@@ -46,8 +43,8 @@ export default function ProfilePage() {
               <div className="flex gap-3" key={"Roles"}>
                 <h3 className="text-lg">Roles:</h3>
                 <span className="opacity-75">
-                  {me.roles.map((role) => (
-                    <Badge>{role}</Badge>
+                  {me.roles.map((role, index) => (
+                    <Badge key={index}>{role}</Badge>
                   ))}
                 </span>
               </div>

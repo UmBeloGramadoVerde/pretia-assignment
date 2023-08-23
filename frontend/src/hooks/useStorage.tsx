@@ -9,10 +9,10 @@ export function useStorage() {
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, JSON.stringify(tokens));
   }
 
-  function getAuthStorage(): AuthToken | undefined {
-    if (typeof window == "undefined") return undefined;
+  function getAuthStorage(): AuthToken | null {
+    if (typeof window == "undefined") return null;
     const tokens = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
-    return tokens ? JSON.parse(tokens) : undefined;
+    return tokens ? JSON.parse(tokens) : null;
   }
 
   function removeAuthStorage(): void {

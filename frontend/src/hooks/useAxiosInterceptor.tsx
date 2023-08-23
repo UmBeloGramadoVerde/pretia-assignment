@@ -25,7 +25,10 @@ export function useAxiosInterceptor() {
 
   const shouldIntercept = (error: any) => {
     try {
-      return error.response.status === 401;
+      return (
+        error.response.status === 401 &&
+        error.response.data.error.errorName.includes("UnauthorizedException")
+      );
     } catch (e) {
       return false;
     }
@@ -40,7 +43,6 @@ export function useAxiosInterceptor() {
     return new Promise((resolve, reject) => {
       if (!refreshToken) {
         throw NO_AUTH_TOKEN_MESSAGE;
-        reject(NO_AUTH_TOKEN_MESSAGE);
       }
       axios
         .post(
@@ -60,7 +62,6 @@ export function useAxiosInterceptor() {
             window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
           }
           throw err;
-          reject(err);
         });
     });
   };
@@ -69,7 +70,6 @@ export function useAxiosInterceptor() {
       failedRequests.forEach((prom) => {
         if (error) {
           throw error;
-          prom.reject(error);
         } else {
           prom.resolve(token);
         }
@@ -91,14 +91,12 @@ export function useAxiosInterceptor() {
     ): Promise<Request | AxiosResponse<any, any>> => {
       if (!shouldIntercept(error)) {
         throw error;
-        return Promise.reject(error);
       }
       console.debug("error", error);
       console.debug("error.config._retry", error.config._retry);
 
       if (error.config._retry || error.config._queued) {
         throw error;
-        return Promise.reject(error);
       }
 
       const originalRequest = error.config;
@@ -113,7 +111,6 @@ export function useAxiosInterceptor() {
           })
           .catch((error) => {
             throw error;
-            return Promise.reject(error); // Ignore refresh token request's "err" and return actual "error" for the original request
           });
       }
 
@@ -137,7 +134,6 @@ export function useAxiosInterceptor() {
             }
             processQueue(err, null);
             throw err;
-            reject(err);
           })
           .finally(() => {
             setIsRefreshing(false);

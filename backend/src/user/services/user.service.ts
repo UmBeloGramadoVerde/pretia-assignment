@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 
@@ -9,6 +9,7 @@ import { UserOutput } from '../dtos/user-output.dto';
 import { UpdateUserInput } from '../dtos/user-update-input.dto';
 import { User } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
+import { WrongCredentialsException } from 'src/shared/exceptions/wrong-credentials.exception';
 
 @Injectable()
 export class UserService {
@@ -45,10 +46,10 @@ export class UserService {
 
     this.logger.log(ctx, `calling ${UserRepository.name}.findOne`);
     const user = await this.repository.findOne({ where: { username } });
-    if (!user) throw new UnauthorizedException();
+    if (!user) throw new WrongCredentialsException("No user found", HttpStatus.UNAUTHORIZED);
 
     const match = await compare(pass, user.password);
-    if (!match) throw new UnauthorizedException();
+    if (!match) throw new WrongCredentialsException("Wrong credentials", HttpStatus.UNAUTHORIZED);
 
     return plainToClass(UserOutput, user, {
       excludeExtraneousValues: true,

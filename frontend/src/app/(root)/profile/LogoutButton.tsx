@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LogOutIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/components/ui/use-toast";
 
 const LogoutButton = () => {
   const { logout } = useAuth();
@@ -11,6 +12,10 @@ const LogoutButton = () => {
     ev.preventDefault();
     ev.stopPropagation();
     logout();
+    toast({
+      variant: "success",
+      description: "Logged out!",
+    });
     router.push("/")
   };
 

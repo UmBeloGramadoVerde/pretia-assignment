@@ -1,25 +1,25 @@
 import { SignInInput, SignUpInput, User } from "@/types/user";
 import {
   UseMutateFunction,
+  UseMutationResult,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
 import { AuthToken } from "@/types/authToken";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ME_QUERY_KEY, useMe } from "./useMe";
 import { useToast } from "@/components/ui/use-toast";
 import { useApi } from "./useApi";
+import { useRouter } from "next/navigation";
 
 export const AUTH_QUERY_KEY = "auth";
 
 type UseAuthInterface = {
-  signInMutation: UseMutateFunction<AuthToken, unknown, SignInInput, unknown>;
-  loadingSignIn: boolean;
-  resultSignIn: AuthToken | null;
-  signUpMutation: UseMutateFunction<User, Error, SignUpInput, unknown>;
-  loadingSignUp: boolean;
-  resultSignUp: User | null;
+  signIn: UseMutationResult<AuthToken, unknown, SignInInput, unknown>;
+  signUp: UseMutationResult<User, Error, SignUpInput, unknown>;
+  authTokens: AuthToken | null;
+  isLoggedIn: boolean;
   logout: () => void;
 };
 
@@ -27,20 +27,11 @@ export function useAuth(): UseAuthInterface {
   const api = useApi();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { saveAuthStorage, removeAuthStorage } = useStorage();
-  const [loadingSignIn, setLoadingSignIn] = useState(false);
-  const [resultSignIn, setResultSignIn] = useState<AuthToken | null>(null);
-  const [loadingSignUp, setLoadingSignUp] = useState(false);
-  const [resultSignUp, setResultSignUp] = useState<User | null>(null);
+  const router = useRouter();
+  const { saveAuthStorage, removeAuthStorage, getAuthStorage } = useStorage();
 
-  const { mutate: signInMutation } = useMutation<
-    AuthToken,
-    unknown,
-    SignInInput,
-    unknown
-  >(
+  const signInMutation = useMutation<AuthToken, unknown, SignInInput, unknown>(
     (signInInput) => {
-      setLoadingSignIn(true);
       return api
         .post("/api/auth/login", JSON.stringify(signInInput), {
           headers: {
@@ -53,27 +44,17 @@ export function useAuth(): UseAuthInterface {
       onSuccess: (response) => {
         saveAuthStorage(response);
         queryClient.setQueryData([AUTH_QUERY_KEY], response);
-        queryClient.invalidateQueries({ queryKey: [ME_QUERY_KEY] });
-        setLoadingSignIn(false);
-        setResultSignIn(response);
-        queryClient.invalidateQueries([ME_QUERY_KEY])
-        queryClient.refetchQueries([ME_QUERY_KEY])
+        queryClient.invalidateQueries([ME_QUERY_KEY]);
+        queryClient.refetchQueries([ME_QUERY_KEY]);
       },
       onError: (error) => {
-        setLoadingSignIn(false);
         throw new Error("Failed on sign in request" + error);
       },
     }
   );
 
-  const { mutate: signUpMutation } = useMutation<
-    User,
-    Error,
-    SignUpInput,
-    unknown
-  >(
+  const signUpMutation = useMutation<User, Error, SignUpInput, unknown>(
     (signUpInput) => {
-      setLoadingSignUp(true);
       return api
         .post("/api/auth/register", JSON.stringify(signUpInput), {
           headers: {
@@ -85,15 +66,13 @@ export function useAuth(): UseAuthInterface {
     {
       onSuccess: (response) => {
         queryClient.setQueryData([ME_QUERY_KEY], response);
-        setLoadingSignUp(false);
-        setResultSignUp(response);
       },
-      onError: (error: Error) => {
+      onError: (error: any) => {
+        console.debug('error', error)
         toast({
           variant: "destructive",
-          description: error.message,
+          description: error.response.data.error.message ?? error.message,
         });
-        setLoadingSignUp(false);
       },
     }
   );
@@ -101,16 +80,21 @@ export function useAuth(): UseAuthInterface {
   const logout = () => {
     queryClient.setQueryData([AUTH_QUERY_KEY], null);
     queryClient.setQueryData([ME_QUERY_KEY], null);
-    removeAuthStorage;
+    removeAuthStorage();
+    router.push("/");
   };
 
+  useEffect(() => {
+    const storedAuthTokens = getAuthStorage();
+    if (storedAuthTokens)
+      queryClient.setQueryData([AUTH_QUERY_KEY], storedAuthTokens);
+  }, []);
+
   return {
-    signInMutation,
-    loadingSignIn,
-    resultSignIn,
-    signUpMutation,
-    loadingSignUp,
-    resultSignUp,
+    signIn: signInMutation,
+    signUp: signUpMutation,
+    authTokens: queryClient.getQueryData([AUTH_QUERY_KEY]) ?? null,
+    isLoggedIn: !!queryClient.getQueryData([AUTH_QUERY_KEY]),
     logout,
   };
 }

@@ -11,6 +11,7 @@ import { AuthToken } from "@/types/authToken";
 import { useApi } from "./useApi";
 import { BaseApiResponse } from "@/types/api";
 import axios from "axios";
+import { useAuth } from "./useAuth";
 
 export const ME_QUERY_KEY = "me";
 
@@ -21,6 +22,7 @@ interface IUseUser {
 
 export function useMe(): IUseUser {
   const api = useApi();
+  const {isLoggedIn} = useAuth();
 
   const meQuery = useQuery(
     [ME_QUERY_KEY],
@@ -30,6 +32,7 @@ export function useMe(): IUseUser {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      enabled: isLoggedIn
     }
   );
 

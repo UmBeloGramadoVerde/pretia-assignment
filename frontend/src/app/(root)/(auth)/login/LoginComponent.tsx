@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader/Loader";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -40,11 +41,24 @@ export default function LoginComponent() {
     },
   });
   const router = useRouter();
-  const { signInMutation: signIn, loadingSignIn: loading, resultSignIn: result } = useAuth();
-  const onSubmit = (values: z.infer<typeof formSchema>) => signIn(values);
+  const { signIn } = useAuth();
+  const onSubmit = (values: z.infer<typeof formSchema>) =>
+    signIn.mutate(values);
   useEffect(() => {
-    result?.accessToken ? router.push("/") : null;
-  }, [result]);
+    if (signIn.isSuccess) {
+      toast({
+        variant: "success",
+        description: "Login successful!",
+      });
+      router.push("/");
+    }
+    if (signIn.isError) {
+      toast({
+        variant: "error",
+        description: "Login failed",
+      });
+    }
+  }, [signIn.isSuccess, signIn.isError]);
   return (
     <Card className="max-w-[350px] w-full relative">
       <CardHeader>
@@ -61,7 +75,7 @@ export default function LoginComponent() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input {...field} id="usernameInput"/>
+                    <Input {...field} id="usernameInput" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -74,7 +88,7 @@ export default function LoginComponent() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" id="passwordInput"/>
+                    <Input {...field} type="password" id="passwordInput" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -101,7 +115,7 @@ export default function LoginComponent() {
           </form>
         </Form>
       </CardContent>
-      {loading && (
+      {signIn.isLoading && (
         <div className="w-full h-full bg-background opacity-75 top-0 absolute flex justify-center items-center">
           <Loader className="opacity-100 bg-background" />
         </div>

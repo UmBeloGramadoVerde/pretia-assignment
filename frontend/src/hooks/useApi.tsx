@@ -1,8 +1,4 @@
-import { BaseApiResponse } from "@/types/api";
-import { AuthToken } from "@/types/authToken";
-import axios, { AxiosError } from "axios";
-import axiosRetry from "axios-retry";
-import { useStorage } from "./useStorage";
+import axios from "axios";
 
 import { useAxiosInterceptor } from "./useAxiosInterceptor";
 

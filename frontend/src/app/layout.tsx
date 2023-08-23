@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeContextProvider } from "@/contexts/ThemeContextProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({
       <link rel="icon" href="/images/favicon.ico" sizes="any" />
       <body className={inter.className}>
         <ThemeContextProvider>
-          <QueryWrapper>{children}</QueryWrapper>
+          <QueryWrapper>
+            {children} <ReactQueryDevtools initialIsOpen={false} />
+          </QueryWrapper>
           <Toaster />
         </ThemeContextProvider>
       </body>
