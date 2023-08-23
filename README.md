@@ -5,9 +5,11 @@ This repository contains a Content Management System (CMS) project built using N
 
 ## Running the app
 
+```
 git clone https://github.com/UmBeloGramadoVerde/pretia-assignment.git
 cd pretia-assignment
 docker-compose up
+```
 
 ## Tech Stack
 
@@ -63,7 +65,7 @@ The project is structured as follows:
 
 ## Database structure
 
-![Database structure](https://imgur.com/a/XPU1QzB)
+![Database structure](https://ibb.co/vknk1tT)
 
 Currently each post only has one image, therefore the One to One relationship, another TODO is allow multiple image posting
 
