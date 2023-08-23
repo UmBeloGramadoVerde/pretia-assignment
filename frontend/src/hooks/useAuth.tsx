@@ -3,6 +3,7 @@ import {
   UseMutateFunction,
   UseMutationResult,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useStorage } from "./useStorage";
@@ -68,7 +69,7 @@ export function useAuth(): UseAuthInterface {
         queryClient.setQueryData([ME_QUERY_KEY], response);
       },
       onError: (error: any) => {
-        console.debug('error', error)
+        console.debug("error", error);
         toast({
           variant: "destructive",
           description: error.response.data.error.message ?? error.message,
@@ -86,15 +87,19 @@ export function useAuth(): UseAuthInterface {
 
   useEffect(() => {
     const storedAuthTokens = getAuthStorage();
-    if (storedAuthTokens)
+    if (storedAuthTokens) {
       queryClient.setQueryData([AUTH_QUERY_KEY], storedAuthTokens);
+      queryClient.refetchQueries([ME_QUERY_KEY]);
+    }
   }, []);
+
+  const authTokens = useQuery<AuthToken | null>([AUTH_QUERY_KEY]);
 
   return {
     signIn: signInMutation,
     signUp: signUpMutation,
-    authTokens: queryClient.getQueryData([AUTH_QUERY_KEY]) ?? null,
-    isLoggedIn: !!queryClient.getQueryData([AUTH_QUERY_KEY]),
+    authTokens: authTokens.data ?? null,
+    isLoggedIn: !!authTokens,
     logout,
   };
 }

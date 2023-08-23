@@ -26,7 +26,11 @@ export default function WritePostPage() {
             <CardDescription>Click below to log in</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => router.push("/login")} className="w-fit">
+            <Button
+              onClick={() => router.push("/login")}
+              className="w-fit"
+              id="loginWritePageButton"
+            >
               Login
             </Button>
           </CardContent>

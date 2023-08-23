@@ -11,6 +11,18 @@ cd pretia-assignment
 docker-compose up
 ```
 
+Obs.: .env files are commited to the repo, that is not desired in a real app, but since evaluators have to run the app without interacting with me we don't have the possibility of sharing it internally.
+
+## Running the automated tests
+Tested using using node v20.5.0 (npm v9.8.0)
+
+```
+docker run  --platform linux/amd64 -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome
+cd e2e
+yarn
+yarn test
+```
+
 ## Tech Stack
 
 ### Frontend:

@@ -76,10 +76,7 @@ async function postTest(driver) {
     const titleInput = await driver.findElement(By.id("titleInput"));
     const textInput = await driver.findElement(By.id("textInput"));
     const jsonInput = await driver.findElement(By.id("jsonInput"));
-
     const submitButton = await driver.findElement(By.id("submitButton"));
-
-    await driver.wait(until.elementIsVisible(submitButton), 10000);
 
     await titleInput.sendKeys("titleInput");
     await textInput.sendKeys("textInput");
@@ -91,7 +88,7 @@ async function postTest(driver) {
 
     const url = await driver.getCurrentUrl();
     createdPostId = url.split("/view/")[1];
-    console.debug('createdPostId', createdPostId)
+    console.debug("createdPostId", createdPostId);
     console.log("Posting successful. Page URL:", url);
   } catch (error) {
     throw ("Posting failed:", error);
