@@ -55,17 +55,16 @@ The project is structured as follows:
 │   │   └── ...
 │   └── Dockerfile                # Dockerfile for building Frontend
 │   └── ...
-├── docker-compose.yml            # Docker configuration
-├── README.md                     # Project documentation
-└── ...
 ├── e2e
 │   ├── test.js                   # Automated tests for the main flows of the app
+├── docker-compose.yml            # Docker configuration
+├── README.md                     # Project documentation
 └── ...
 ```
 
 ## Database structure
 
-![Database structure](https://ibb.co/vknk1tT)
+![Database structure](https://github.com/UmBeloGramadoVerde/pretia-assignment/blob/main/image.jpg?raw=true)
 
 Currently each post only has one image, therefore the One to One relationship, another TODO is allow multiple image posting
 
