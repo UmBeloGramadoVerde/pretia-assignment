@@ -13,6 +13,10 @@ docker-compose up
 
 Obs.: .env files are commited to the repo, that is not desired in a real app, but since evaluators have to run the app without interacting with me we don't have the possibility of sharing it internally.
 
+Frontend: http://localhost:3001/<br/>
+Backend: http://localhost:3000/api<br/>
+Swagger: http://localhost:3000/swagger<br/>
+
 ## Running the automated tests
 Tested using using node v20.5.0 (npm v9.8.0)
 
@@ -23,7 +27,7 @@ yarn
 yarn test
 ```
 
-Check http://localhost:4444/ui# to see Selenium grid
+Check http://localhost:4444/ui# to see Selenium grid<br/>
 Check http://localhost:7900/?autoconnect=1&resize=scale&password=secret to see the Chrome instance being run
 
 ## Tech Stack
