@@ -42,7 +42,7 @@ export class Article {
   @UpdateDateColumn({ name: "updatedAt" })
   updatedAt: Date;
 
-  @OneToOne(() => File, (file) => file.path, { cascade: true, eager: true })
+  @OneToOne(() => File, (file) => file.path, { cascade: true, nullable: true, eager: true })
   @JoinColumn()
   imageContent: File;
 

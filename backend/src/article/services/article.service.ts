@@ -125,6 +125,8 @@ export class ArticleService {
     if (image) {
       const savedFile = await this.fileService.saveFileMetadata(image);
       article.imageContent = plainToClass(File, savedFile);
+    } else if (previousImageContent.id) {
+      article.imageContent = null;
     }
 
     const updatedArticle: Article = {

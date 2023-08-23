@@ -19,7 +19,7 @@ export const AUTH_QUERY_KEY = "auth";
 type UseAuthInterface = {
   signIn: UseMutationResult<AuthToken, unknown, SignInInput, unknown>;
   signUp: UseMutationResult<User, Error, SignUpInput, unknown>;
-  authTokens: AuthToken | null;
+  authToken: string | null;
   isLoggedIn: boolean;
   logout: () => void;
 };
@@ -98,8 +98,8 @@ export function useAuth(): UseAuthInterface {
   return {
     signIn: signInMutation,
     signUp: signUpMutation,
-    authTokens: authTokens.data ?? null,
-    isLoggedIn: !!authTokens,
+    authToken: authTokens.data?.accessToken ?? null,
+    isLoggedIn: !!authTokens.data?.accessToken,
     logout,
   };
 }
