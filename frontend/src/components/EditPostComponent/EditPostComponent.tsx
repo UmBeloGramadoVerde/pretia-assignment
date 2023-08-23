@@ -32,8 +32,8 @@ import Loader from "@/components/Loader/Loader";
 import { toast } from "../ui/use-toast";
 
 const formSchema = z.object({
-  title: z.string(),
-  textContent: z.string(),
+  title: z.string().nonempty(),
+  textContent: z.string().nonempty(),
   jsonContent: z.any(),
   imageContent: z.any(),
 });

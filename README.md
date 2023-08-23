@@ -23,6 +23,9 @@ yarn
 yarn test
 ```
 
+Check http://localhost:4444/ui# to see Selenium grid
+Check http://localhost:7900/?autoconnect=1&resize=scale&password=secret to see the Chrome instance being run
+
 ## Tech Stack
 
 ### Frontend:
@@ -102,7 +105,16 @@ Swagger is a powerful tool for designing, documenting, and testing APIs. With th
 
 Passport is a widely-used authentication middleware for Node.js. It offers various authentication strategies, including local authentication (username/password), OAuth, and more. Using Passport with Nest.js simplifies the process of implementing authentication and authorization in your backend application. Its flexibility allows you to choose the appropriate authentication mechanism for your application's needs. With Passport, you can secure your endpoints and manage user authentication efficiently.
 
-To run selenium chorme instances:
-    docker run  --platform linux/amd64 -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome
-    Check http://localhost:4444/ui# to see selenium grid
-    Check http://localhost:7900/?autoconnect=1&resize=scale&password=secret to see the tests that are being run
+Many parts of the Backend are inspired by the examples available in https://github.com/nestjs/awesome-nestjs. The page is a great resource for when a quick instance of nest has to be spun up for a technical challenge or for a hackthon. I picked the desired stack for the task at hand and checked out the avaiable examples from the pool that had the same stack.
+
+## Points that must be improved
+
+```
+Support for multiple images.
+Better password encryption.
+Implement unit tests.
+Cover all the possible flows in the app (success and failures).
+Implement pagination in /all-posts page.
+Improve documentation of functions.
+Move away from local upload and implement cloud storage.
+```
