@@ -18,7 +18,7 @@ async function testFlows() {
     console.error(error);
   } finally {
     // Close the browser
-    //driver.quit();
+    driver.quit();
   }
 }
 
