@@ -1,6 +1,5 @@
-# pretia-assignment
+# Pretia CMS
  
-Pretia CMS Project README
 This repository contains a Content Management System (CMS) project built using Next.js, NestJS, PostgresQL, React Query and Selenium. The project aims to provide user authentication, content management, shared content functionalities and automated testing.
 
 ## Running the app
@@ -117,7 +116,7 @@ Many parts of the Backend are inspired by the examples available in https://gith
 Support for multiple images.
 Better password encryption.
 Implement unit tests.
-Cover all the possible flows in the app (success and failures).
+Improve test automation to cover all the possible flows in the app (success and failures).
 Implement pagination in /all-posts page.
 Improve documentation of functions.
 Move away from local upload and implement cloud storage.
