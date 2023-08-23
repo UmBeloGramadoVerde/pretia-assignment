@@ -11,23 +11,19 @@ This repository contains a Content Management System (CMS) project built using N
 
 ### Frontend:
 
-Next.js: A React framework for building server-rendered applications.
-React Query: A data-fetching library for managing and synchronizing server state in React applications.
-Tailwind: A data-fetching library for managing and synchronizing server state in React applications.
+Next.js, React Query, Tailwind
 
 ### Backend:
 
-NestJS: A TypeScript framework for building efficient and scalable server-side applications.
-PostgresQL: A relational database for storing and managing data.
-TypeORM: An Object-Relational Mapping library for TypeScript and JavaScript.
+NestJS, PostgresQL, TypeORM
 
 ### Testing:
-Selenium: Interactions automator with web browsers for functional and regression testing of web applications.
-TODO -> Chai: Library that provides expressive assertions for writing clear test cases.
+Selenium, TODO -> Chai
 
 ## Project Structure
 The project is structured as follows:
 
+```
 ├── backend
 │   ├── src
 │   │   ├── article               # Content management module
@@ -61,8 +57,9 @@ The project is structured as follows:
 ├── e2e
 │   ├── test.js                   # Automated tests for the main flows of the app
 └── ...
+```
 
-## Observations about the Frontend
+## Observations about the Frontend Stack
 
 Next.js is a powerful React framework that excels in server-side rendering (SSR) and static site generation (SSG). It provides an opinionated structure for building React applications with built-in routing, server-side rendering capabilities, and automatic code splitting. Next.js enhances performance by rendering pages on the server, resulting in faster initial load times and improved SEO. It also supports client-side routing for dynamic interactions. Its rich ecosystem of plugins and tools simplifies tasks like internationalization and optimization. Next.js's versatility makes it an excellent choice for building modern web applications with enhanced user experiences.
 
@@ -72,7 +69,7 @@ React Query is a data fetching and caching library designed specifically for Rea
 
 Shacdn is a lightweight, accessible, and themeable design system created by Radix UI. It offers a collection of design primitives and components that can be used to build user interfaces with a consistent and accessible design language. Shacdn encourages the use of simple utility classes to compose components, aligning well with the utility-first approach of Tailwind CSS. Its focus on accessibility ensures that your application will be usable by a wider range of users. By using Shacdn, you can create well-designed and accessible user interfaces while maintaining a lightweight and efficient codebase.
 
-## Observations about the Backend
+## Observations about the Backend Stack
 
 PostgreSQL is a powerful open-source relational database management system. It's a great choice due to its robustness, support for complex queries, and data integrity features. With features like JSONB data type, support for advanced indexing, and support for geographical data, PostgreSQL can handle a wide range of application requirements. Additionally, its ACID compliance ensures data consistency and reliability. In combination with TypeORM, PostgreSQL provides a solid foundation for managing your application's data.
 
