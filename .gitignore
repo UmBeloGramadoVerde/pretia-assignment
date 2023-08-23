@@ -128,4 +128,4 @@ dist
 
 local
 
-uploads/*
+./backend/uploads/*
