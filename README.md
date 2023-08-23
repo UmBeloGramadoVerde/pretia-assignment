@@ -64,7 +64,7 @@ The project is structured as follows:
 
 ## Database structure
 
-![Database structure](https://github.com/UmBeloGramadoVerde/pretia-assignment/blob/main/image.jpg?raw=true)
+![Database structure](https://github.com/UmBeloGramadoVerde/pretia-assignment/blob/main/frontend/public/images/db_structure.png?raw=true)
 
 Currently each post only has one image, therefore the One to One relationship, another TODO is allow multiple image posting
 
