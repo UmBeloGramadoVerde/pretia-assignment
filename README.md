@@ -121,4 +121,5 @@ Cover all the possible flows in the app (success and failures).
 Implement pagination in /all-posts page.
 Improve documentation of functions.
 Move away from local upload and implement cloud storage.
+Cleanup after automated tests are run.
 ```

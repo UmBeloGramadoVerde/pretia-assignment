@@ -73,6 +73,8 @@ async function postTest(driver) {
   try {
     await driver.get("http://127.0.0.1:3001/write");
 
+    await driver.sleep(5000)
+
     const titleInput = await driver.findElement(By.id("titleInput"));
     const textInput = await driver.findElement(By.id("textInput"));
     const jsonInput = await driver.findElement(By.id("jsonInput"));
