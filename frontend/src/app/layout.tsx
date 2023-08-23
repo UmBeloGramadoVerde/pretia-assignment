@@ -8,8 +8,8 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pretia Assignment Frontend",
-  description: "Pretia Assignment Frontend",
+  title: "Pretia CMS",
+  description: "Pretia CMS",
 };
 
 export default function RootLayout({

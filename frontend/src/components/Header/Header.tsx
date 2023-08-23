@@ -19,15 +19,18 @@ import {
 } from "@/ui/dropdown-menu";
 import { useMe } from "@/hooks/useMe";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { ServerCogIcon } from "lucide-react";
 
 const Header = () => {
   const { meQuery } = useMe();
   const router = useRouter();
   return (
     <div className="p-5 flex justify-between items-center border-b border-border">
-      <h1 className="text-2xl cursor-pointer" onClick={() => router.push("/")}>
-        MrK CMS
-      </h1>
+      <div onClick={() => router.push("/")} className="flex gap-3 items-center cursor-pointer">
+        <ServerCogIcon width={32} height={32}/>
+        <h1 className="text-2xl">Pretia CMS</h1>
+      </div>
       <section className="hidden md:block">
         <NavigationMenu>
           <NavigationMenuList className="gap-3">

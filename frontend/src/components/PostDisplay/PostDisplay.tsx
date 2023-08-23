@@ -43,7 +43,7 @@ const PostDisplay: React.FC<PostDisplayProps> = ({ post }) => {
         )}
         {post.imageContent?.path && (
           <div className="">
-            <Image
+            <img
               src={getImageLink(post.imageContent.path)}
               alt="post image"
               width={200}

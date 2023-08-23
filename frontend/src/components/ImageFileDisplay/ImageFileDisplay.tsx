@@ -15,7 +15,7 @@ const ImageFileDisplay: React.FC<ImageFileDisplayProps> = ({
   return (
     <div>
       <div className="relative flex w-fit">
-        <Image alt="preview image" src={imageUrl} width={256} height={256} />
+        <img alt="preview image" src={imageUrl} width={256} height={256} />
         <div className="absolute right-2 top-2">
           <RemoveButton removeFn={removeImageFn} />
         </div>

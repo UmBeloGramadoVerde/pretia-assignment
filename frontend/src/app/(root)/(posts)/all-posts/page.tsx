@@ -10,9 +10,9 @@ export default function AllPostsPage() {
   const posts = fetchPosts.data;
   return (
     <div className="flex flex-col gap-5">
-      {posts?.length && posts.map((post) => (
-        <PostDisplay post={post} key={post.id}/>
-      ))}
+      {posts?.length
+        ? posts.map((post) => <PostDisplay post={post} key={post.id} />)
+        : null}
     </div>
   );
 }

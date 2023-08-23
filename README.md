@@ -80,3 +80,9 @@ We used React.lazy and Suspense to lazy load the bigger components, reducing the
 Shared components, hooks, and types are placed under src/, while the app/ folder is reserved for routing, and subfolders are able to hold feature-specific components, hooks, and types.
 
 We used https://ui.shadcn.com/ for the component library. It is easy to use, supports TypeScript, completely customizable, and compatible with Tailwind CSS. Components are added using: npx shadcn-ui@latest add [component].
+
+
+To run selenium chorme instances:
+    docker run  --platform linux/amd64 -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome
+    Check http://localhost:4444/ui# to see selenium grid
+    Check http://localhost:7900/?autoconnect=1&resize=scale&password=secret to see the tests that are being run

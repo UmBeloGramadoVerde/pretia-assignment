@@ -17,8 +17,27 @@ services:
     environment:
       - DB_HOST=pgsqldb
       - DB_NAME=cms_db_postgres
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+  migration:
+    build:
+      context: ./backend
+    links:
+      - pgsqldb
+    depends_on:
+      - pgsqldb
+    command:
+      [
+        "./wait-for-it/wait-for-it.sh",
+        "pgsqldb:5432",
+        "--",
+        "yarn",
+        "migration:run",
+      ]
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=pgsqldb
+      - DB_NAME=cms_db_postgres
+
   pgsqldb:
     image: postgres:latest
     environment:
@@ -29,28 +48,6 @@ services:
       - 5432:5432
     volumes:
       - pgsqldata:/data/postgresql/data
-
-  chrome:
-    platform: linux/amd64
-    image: selenium/node-chrome:beta
-    shm_size: 2gb
-    depends_on:
-      - selenium-hub
-    environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-      - SE_NODE_MAX_SESSIONS=4
-  selenium-hub:
-    platform: linux/amd64
-    image: selenium/hub:latest
-    container_name: selenium-hub
-    ports:
-      - "4442:4442"
-      - "4443:4443"
-      - "4444:4444"
 
 volumes:
   pgsqldata:
