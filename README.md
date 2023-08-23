@@ -5,7 +5,9 @@ This repository contains a Content Management System (CMS) project built using N
 
 ## Running the app
 
-
+git clone https://github.com/UmBeloGramadoVerde/pretia-assignment.git
+cd pretia-assignment
+docker-compose up
 
 ## Tech Stack
 
